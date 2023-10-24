@@ -1,0 +1,2 @@
+insert into user_profile values ('3fe17ae9-54e9-463c-8404-89e8a15ee294', 'thon_ataide', 'Thonzera');
+insert into user_authentication (id, user_profile_id, username, password) values ('e3f06c72-2141-4e13-b008-4561440f3ae5', '3fe17ae9-54e9-463c-8404-89e8a15ee294', 'thon', '$2a$10$ZoP5b2iEMfDXkgdT8kgCSOUEEn0yEmMKhGAyR90eqHK0PigSjnXbu');
