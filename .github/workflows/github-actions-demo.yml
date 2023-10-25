@@ -1,6 +1,7 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is submiting a new pull request for ${{ GITHUB_HEAD_REF }} 🚀
 on:
+  push:
   pull_request:
     types:
       [opened, edited, reopened, synchronize]
