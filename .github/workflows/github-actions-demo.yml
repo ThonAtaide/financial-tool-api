@@ -1,7 +1,6 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is submiting a new pull request for ${{ GITHUB_HEAD_REF }} 🚀
 on:
-  push:
   pull_request:
     types:
       [opened, edited, reopened, synchronize]
@@ -22,7 +21,7 @@ jobs:
         with:
           arguments: test
       - name: Setup and execute Gradle 'buid' task
-          uses: gradle/gradle-build-action@v2
-          with:
-            arguments: build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
       - run: echo "🍏 This job's status is ${{ job.status }}."
