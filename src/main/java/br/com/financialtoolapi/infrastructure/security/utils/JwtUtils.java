@@ -13,13 +13,10 @@ import static org.springframework.security.oauth2.jose.jws.MacAlgorithm.HS256;
 @UtilityClass
 public class JwtUtils {
 
-    public static final String AUTHORIZATION_METHOD = "authorizationMethod";
-
     public String buildJwtToken(
             final String subject,
             final JwtEncoder jwtEncoder,
-            final Long tokenDuration,
-            final AuthorizationMethod authorizationMethod
+            final Long tokenDuration
     ) {
         final Instant now = Instant.now();
 
@@ -30,15 +27,9 @@ public class JwtUtils {
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(tokenDuration))
                 .subject(subject)
-                .claim(AUTHORIZATION_METHOD, authorizationMethod.name())
                 .build();
         return jwtEncoder
                 .encode(JwtEncoderParameters.from(jwsHeader, claims))
                 .getTokenValue();
-    }
-
-    public enum AuthorizationMethod {
-        LOCAL,
-        EXTERNAL
     }
 }

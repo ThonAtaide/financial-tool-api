@@ -1,4 +1,4 @@
-package br.com.financialtoolapi.infrastructure.security;
+package br.com.financialtoolapi.infrastructure.security.services;
 
 import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
 import br.com.financialtoolapi.infrastructure.security.dto.LoginOutputDataDto;
@@ -28,10 +28,9 @@ public class LocalAuthenticationService {
                 .authenticate(credentials).getPrincipal();
         final String jwtToken = JwtUtils
                 .buildJwtToken(
-                        authenticatedUser.getUsername(),
+                        authenticatedUser.getEmail(),
                         jwtEncoder,
-                        jwtProperties.getTokenDurationSeconds(),
-                        JwtUtils.AuthorizationMethod.LOCAL
+                        jwtProperties.getTokenDurationSeconds()
                 );
         return new LoginOutputDataDto(jwtToken, authenticatedUser.getNickname());
     }

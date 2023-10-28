@@ -1,10 +1,9 @@
-package br.com.financialtoolapi.application.adapters.in.security;
+package br.com.financialtoolapi.application.domain.usecases.security;
 
+import br.com.financialtoolapi.application.domain.repositories.UserCredentialDataEntityRepository;
+import br.com.financialtoolapi.application.dtos.out.UserAuthenticationOutputDto;
 import br.com.financialtoolapi.application.exceptions.ResourceNotFoundException;
 import br.com.financialtoolapi.application.mapper.AuthenticationMapper;
-import br.com.financialtoolapi.application.model.dto.out.UserLoginOutputDto;
-import br.com.financialtoolapi.application.ports.in.security.AuthenticationUseCase;
-import br.com.financialtoolapi.infrastructure.repository.repositories.UserCredentialEntityRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
@@ -12,14 +11,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationUseCaseImpl implements AuthenticationUseCase {
+public class FindUserCredentialDataByUsernameUseCase {
 
     private final AuthenticationMapper authenticationMapper = Mappers.getMapper(AuthenticationMapper.class);
-    private final UserCredentialEntityRepository userCredentialEntityRepository;
+    private final UserCredentialDataEntityRepository userCredentialDataEntityRepository;
 
-    @Override
-    public UserLoginOutputDto fetchUserCredentialsByUsername(@NonNull String username) {
-        return userCredentialEntityRepository
+    public UserAuthenticationOutputDto findUserCredentialsByUsername(@NonNull String username) {
+        return userCredentialDataEntityRepository
                 .findUserByUsernameEquals(username)
                 .map(authenticationMapper::toUserLoginOutputDto)
                 .orElseThrow(() -> new ResourceNotFoundException(

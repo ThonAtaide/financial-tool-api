@@ -16,6 +16,8 @@ public class UserDetailsImpl implements UserDetails {
 
     private String nickname;
 
+    private String email;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();
@@ -34,6 +36,8 @@ public class UserDetailsImpl implements UserDetails {
     public String getNickname() {
         return nickname;
     }
+
+    public String getEmail() {return email; }
 
     @Override
     public boolean isAccountNonExpired() {

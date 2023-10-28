@@ -1,17 +1,19 @@
-package br.com.financialtoolapi.application.model.entities;
+package br.com.financialtoolapi.application.domain.entities.security;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.UUID;
 
-@Entity
 @Getter
 @Setter
-@Table(name = "user_authentication")
-public class UserCredentialEntity {
+@Builder
+@ToString(onlyExplicitlyIncluded = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "user_credentials_data")
+public class UserCredentialDataEntity {
 
     @Id
     @ToString.Include
@@ -27,7 +29,7 @@ public class UserCredentialEntity {
     @ToString.Include
     private String password;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "user_profile_id", nullable = false)
-    private UserProfileEntity userProfile;
+    @OneToOne
+    @JoinColumn(name = "user_account_id", nullable = false)
+    private UserAccountEntity userAccount;
 }

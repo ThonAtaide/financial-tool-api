@@ -26,11 +26,16 @@ public class BearerTokenCookieResolver implements BearerTokenResolver {
         return Arrays.stream(cookies)
                 .filter(cookie -> CookieUtils.ACCESS_TOKEN_COOKIE.equals(cookie.getName()))
                 .map(Cookie::getValue)
+                .filter(this::tokenStringIsNotEmpty)
                 .findAny()
                 .orElse(null);
     }
 
-    private boolean cookiesIsNotEmpty(Cookie[] cookies) {
+    private boolean cookiesIsNotEmpty(final Cookie[] cookies) {
         return cookies.length > 0;
+    }
+
+    private boolean tokenStringIsNotEmpty(final String token) {
+        return token == null || !token.isEmpty();
     }
 }

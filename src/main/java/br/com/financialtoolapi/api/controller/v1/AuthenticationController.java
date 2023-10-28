@@ -4,7 +4,7 @@ import br.com.financialtoolapi.api.controller.v1.request.LoginRequestV1;
 import br.com.financialtoolapi.api.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.api.utils.CookieUtils;
 import br.com.financialtoolapi.infrastructure.config.properties.CookieProperties;
-import br.com.financialtoolapi.infrastructure.security.LocalAuthenticationService;
+import br.com.financialtoolapi.infrastructure.security.services.LocalAuthenticationService;
 import br.com.financialtoolapi.infrastructure.security.dto.UserCredentialsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;

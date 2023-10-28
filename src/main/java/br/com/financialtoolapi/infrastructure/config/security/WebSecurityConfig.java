@@ -1,6 +1,6 @@
 package br.com.financialtoolapi.infrastructure.config.security;
 
-import br.com.financialtoolapi.application.ports.in.security.FetchUserProfileIdentifierUseCase;
+import br.com.financialtoolapi.application.ports.in.security.UserAccountPort;
 import br.com.financialtoolapi.infrastructure.config.security.filters.HeaderAppenderFilter;
 import br.com.financialtoolapi.infrastructure.config.security.resolvers.BearerTokenCookieResolver;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
@@ -35,7 +35,7 @@ public class WebSecurityConfig {
     private final String secret = "sdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsd";
 
     private final BearerTokenCookieResolver bearerTokenCookieResolver;
-    private final FetchUserProfileIdentifierUseCase fetchUserProfileIdentifierUseCase;
+    private final UserAccountPort userAccountPort;
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity) throws Exception {
@@ -45,13 +45,14 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizer ->
-                        authorizer.requestMatchers("/actuator/**").permitAll()
+                        authorizer
+                                .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/auth/login").permitAll()
                                 .anyRequest().authenticated()
                 ).oauth2ResourceServer(oauth2Configurer ->
                         oauth2Configurer.jwt(Customizer.withDefaults())
                                 .bearerTokenResolver(bearerTokenCookieResolver)
-                ).addFilterAfter(new HeaderAppenderFilter(fetchUserProfileIdentifierUseCase), BearerTokenAuthenticationFilter.class);
+                ).addFilterAfter(new HeaderAppenderFilter(userAccountPort), BearerTokenAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
