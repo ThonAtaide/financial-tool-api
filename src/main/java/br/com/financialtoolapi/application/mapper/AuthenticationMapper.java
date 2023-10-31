@@ -9,6 +9,6 @@ import org.mapstruct.Mapping;
 public interface AuthenticationMapper {
 
     @Mapping(source = "userAccount.email", target = "email")
-    @Mapping(source = "userAccount.userProfile.nickname", target = "nickname")
+    @Mapping(source = "userAccount.userProfileData.nickname", target = "nickname")
     UserAuthenticationOutputDto toUserLoginOutputDto(UserCredentialDataEntity userCredential);
 }

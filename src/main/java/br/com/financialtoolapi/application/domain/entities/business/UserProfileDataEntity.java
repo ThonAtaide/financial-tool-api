@@ -16,9 +16,9 @@ public class UserProfileDataEntity {
 
     @Id
     @ToString.Include
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+    private Long id;
 
     @ToString.Include
     @Column(nullable = false)

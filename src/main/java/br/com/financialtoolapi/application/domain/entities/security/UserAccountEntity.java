@@ -35,5 +35,5 @@ public class UserAccountEntity {
     @ToString.Include
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_profile_id", nullable = false)
-    private UserProfileDataEntity userProfile;
+    private UserProfileDataEntity userProfileData;
 }

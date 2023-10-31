@@ -11,8 +11,8 @@ spring:
     properties:
       hibernate:
         dialect: 'org.hibernate.dialect.PostgreSQLDialect'
+
 financial-tool:
   jwt-properties:
-    token-duration-seconds: 6000
-  cookie-properties:
-    token-cookie-duration-seconds: 6000
+    token-duration-seconds: 60
+
