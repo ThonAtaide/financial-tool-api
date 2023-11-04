@@ -1,7 +1,10 @@
 package br.com.financialtoolapi.application.adapters.in.security;
 
 import br.com.financialtoolapi.application.domain.entities.security.UserAccountEntity;
-import br.com.financialtoolapi.application.domain.repositories.UserAccountRepository;
+import br.com.financialtoolapi.application.domain.usecases.security.FindUserAccountByEmailUseCase;
+import br.com.financialtoolapi.application.domain.usecases.security.RegisterUserWithLocalCredentialsUseCase;
+import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
+import br.com.financialtoolapi.application.exceptions.ResourceCreationException;
 import br.com.financialtoolapi.application.exceptions.ResourceNotFoundException;
 import br.com.financialtoolapi.application.ports.in.security.UserAccountPort;
 import lombok.NonNull;
@@ -14,16 +17,18 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserAccountDataAdapter implements UserAccountPort {
 
-    private final UserAccountRepository userAccountRepository;
+    private final FindUserAccountByEmailUseCase findUserAccountByEmailUseCase;
 
     @Override
     public UUID fetchUserAccountIdentifierByEmail(@NonNull String email) {
-        return userAccountRepository
-                .findUserAccountByEmailEquals(email)
+        return findUserAccountByEmailUseCase
+                .fetchUserAccountByEmail(email)
                 .map(UserAccountEntity::getId)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 String.format("Não foi possível encontrar uma conta vinculada ao email %s", email))
                 );
     }
+
+
 }

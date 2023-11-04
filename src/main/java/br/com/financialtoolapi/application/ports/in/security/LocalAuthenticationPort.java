@@ -1,8 +1,12 @@
 package br.com.financialtoolapi.application.ports.in.security;
 
-import br.com.financialtoolapi.application.dtos.out.UserAuthenticationOutputDto;
+import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
+import br.com.financialtoolapi.application.dtos.out.LoggedUserDataDto;
+import br.com.financialtoolapi.infrastructure.security.dto.UserCredentialsDto;
 
 public interface LocalAuthenticationPort {
 
-    UserAuthenticationOutputDto fetchUserCredentialsByUsername(String username);
+    LoggedUserDataDto login(final UserCredentialsDto userCredentialsDto);
+
+    LoggedUserDataDto registerNewUser(final UserRegisterInputDto userRegister);
 }

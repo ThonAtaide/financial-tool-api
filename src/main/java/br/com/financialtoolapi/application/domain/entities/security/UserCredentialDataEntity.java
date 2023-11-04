@@ -29,7 +29,7 @@ public class UserCredentialDataEntity {
     @ToString.Include
     private String password;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_account_id", nullable = false)
     private UserAccountEntity userAccount;
 }

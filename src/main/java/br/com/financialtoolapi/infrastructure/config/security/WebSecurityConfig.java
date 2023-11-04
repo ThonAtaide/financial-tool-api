@@ -1,11 +1,13 @@
 package br.com.financialtoolapi.infrastructure.config.security;
 
 import br.com.financialtoolapi.application.ports.in.security.UserAccountPort;
+import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
 import br.com.financialtoolapi.infrastructure.config.security.filters.HeaderAppenderFilter;
 import br.com.financialtoolapi.infrastructure.config.security.resolvers.BearerTokenCookieResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -25,6 +27,7 @@ public class WebSecurityConfig {
     private final BearerTokenCookieResolver bearerTokenCookieResolver;
     private final UserAccountPort userAccountPort;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final JwtProperties jwtProperties;
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity) throws Exception {
@@ -37,12 +40,13 @@ public class WebSecurityConfig {
                         authorizer
                                 .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/auth/login").permitAll()
+                                .requestMatchers("/auth/register").permitAll()
                                 .anyRequest().authenticated()
                 ).oauth2ResourceServer(oauth2Configurer ->
                         oauth2Configurer.jwt(Customizer.withDefaults())
                                 .authenticationEntryPoint(authenticationEntryPoint)
                                 .bearerTokenResolver(bearerTokenCookieResolver)
-                ).addFilterAfter(new HeaderAppenderFilter(userAccountPort), BearerTokenAuthenticationFilter.class);
+                ).addFilterAfter(new HeaderAppenderFilter(userAccountPort, jwtProperties), BearerTokenAuthenticationFilter.class);
 
         return httpSecurity.build();
     }

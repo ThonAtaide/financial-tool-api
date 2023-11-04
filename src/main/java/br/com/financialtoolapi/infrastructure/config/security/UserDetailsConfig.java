@@ -2,7 +2,7 @@ package br.com.financialtoolapi.infrastructure.config.security;
 
 import br.com.financialtoolapi.application.dtos.out.UserAuthenticationOutputDto;
 import br.com.financialtoolapi.application.exceptions.ResourceNotFoundException;
-import br.com.financialtoolapi.application.ports.in.security.LocalAuthenticationPort;
+import br.com.financialtoolapi.application.ports.in.security.LocalUserDetailsServicePort;
 import br.com.financialtoolapi.infrastructure.security.dto.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,13 +14,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @RequiredArgsConstructor
 public class UserDetailsConfig {
 
-    private final LocalAuthenticationPort localAuthenticationPort;
+    private final LocalUserDetailsServicePort localUserDetailsServicePort;
 
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
             try {
-                final UserAuthenticationOutputDto userCredentials = localAuthenticationPort
+                final UserAuthenticationOutputDto userCredentials = localUserDetailsServicePort
                         .fetchUserCredentialsByUsername(username);
                 return new UserDetailsImpl(
                         userCredentials.username(),

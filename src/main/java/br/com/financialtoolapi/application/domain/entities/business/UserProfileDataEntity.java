@@ -1,17 +1,18 @@
 package br.com.financialtoolapi.application.domain.entities.business;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.UUID;
 
+@Builder
 @Setter
 @Getter
 @Entity
 @Table(name = "user_profile_data")
 @ToString(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserProfileDataEntity {
 
     @Id
@@ -23,6 +24,5 @@ public class UserProfileDataEntity {
     @ToString.Include
     @Column(nullable = false)
     private String nickname;
-
 
 }
