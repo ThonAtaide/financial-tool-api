@@ -8,7 +8,7 @@ import br.com.financialtoolapi.api.utils.CookieUtils;
 import br.com.financialtoolapi.application.exceptions.ResourceCreationException;
 import br.com.financialtoolapi.application.ports.in.security.LocalAuthenticationPort;
 import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
-import br.com.financialtoolapi.infrastructure.security.services.LocalAuthenticationService;
+import br.com.financialtoolapi.infrastructure.security.services.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
@@ -24,9 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/auth", consumes = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 
+    private final JwtService jwtService;
     private final JwtProperties jwtProperties;
-    private final UserDataMapper userDataMapper = Mappers.getMapper(UserDataMapper.class);
     private final LocalAuthenticationPort localAuthenticationPort;
+    private final UserDataMapper userDataMapper = Mappers.getMapper(UserDataMapper.class);
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestV1 loginRequestV1) {
@@ -40,12 +41,12 @@ public class AuthenticationController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
-            final ResponseCookie cookie = CookieUtils
-                    .buildCookieWith(null, jwtProperties.getTokenDurationSeconds());
-            return ResponseEntity
-                    .noContent()
-                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                    .build();
+        final ResponseCookie cookie = CookieUtils
+                .buildCookieWith(null, jwtProperties.getTokenDurationSeconds());
+        return ResponseEntity
+                .noContent()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build();
     }
 
     @PostMapping("/register")
@@ -64,13 +65,14 @@ public class AuthenticationController {
     }
 
     private ResponseEntity<LoginResponseV1> userLogin(LoginRequestV1 loginRequestV1) {
-        final var loginOutputDataDto = localAuthenticationPort
+        final var authenticatedUser = localAuthenticationPort
                 .login(userDataMapper.from(loginRequestV1));
+        final String jwtToken = jwtService.buildToken(authenticatedUser.email());
         final ResponseCookie cookie = CookieUtils
-                .buildCookieWith(loginOutputDataDto.token(), jwtProperties.getTokenDurationSeconds());
+                .buildCookieWith(jwtToken, jwtProperties.getTokenDurationSeconds());
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new LoginResponseV1(loginOutputDataDto.nickname()));
+                .body(new LoginResponseV1(authenticatedUser.nickname()));
     }
 }

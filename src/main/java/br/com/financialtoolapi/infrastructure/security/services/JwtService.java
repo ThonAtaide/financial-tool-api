@@ -1,6 +1,7 @@
-package br.com.financialtoolapi.infrastructure.security.utils;
+package br.com.financialtoolapi.infrastructure.security.services;
 
-import lombok.experimental.UtilityClass;
+import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -10,13 +11,15 @@ import java.time.Instant;
 
 import static org.springframework.security.oauth2.jose.jws.MacAlgorithm.HS256;
 
-@UtilityClass
-public class JwtUtils {
 
-    public String buildJwtToken(
-            final String subject,
-            final JwtEncoder jwtEncoder,
-            final Long tokenDuration
+@RequiredArgsConstructor
+public class JwtService {
+
+    private final JwtEncoder jwtEncoder;
+    private final JwtProperties jwtProperties;
+
+    public String buildToken(
+            final String subject
     ) {
         final Instant now = Instant.now();
 
@@ -25,7 +28,7 @@ public class JwtUtils {
                 .builder()
                 .issuer("financial-tool")
                 .issuedAt(now)
-                .expiresAt(now.plusSeconds(tokenDuration))
+                .expiresAt(now.plusSeconds(jwtProperties.getTokenDurationSeconds()))
                 .subject(subject)
                 .build();
         return jwtEncoder

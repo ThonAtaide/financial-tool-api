@@ -1,5 +1,5 @@
 package br.com.financialtoolapi.application.dtos.out;
 
-public record LoggedUserDataDto(String token, String nickname) {
+public record LoggedUserDataDto(String nickname, String email) {
 
 }

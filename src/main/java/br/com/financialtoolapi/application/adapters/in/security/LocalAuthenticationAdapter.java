@@ -1,15 +1,12 @@
 package br.com.financialtoolapi.application.adapters.in.security;
 
-import br.com.financialtoolapi.application.domain.usecases.security.FindUserAccountByEmailUseCase;
-import br.com.financialtoolapi.application.domain.usecases.security.FindUserCredentialDataByUsernameUseCase;
 import br.com.financialtoolapi.application.domain.usecases.security.RegisterUserWithLocalCredentialsUseCase;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
-import br.com.financialtoolapi.application.exceptions.ResourceCreationException;
 import br.com.financialtoolapi.application.ports.in.security.LocalAuthenticationPort;
 import br.com.financialtoolapi.application.dtos.out.LoggedUserDataDto;
 import br.com.financialtoolapi.application.ports.out.security.AuthenticationWrapper;
 import br.com.financialtoolapi.application.validations.useregister.UserRegisterValidation;
-import br.com.financialtoolapi.infrastructure.security.dto.UserCredentialsDto;
+import br.com.financialtoolapi.application.dtos.in.UserCredentialsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

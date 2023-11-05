@@ -1,4 +1,4 @@
-package br.com.financialtoolapi.infrastructure.security.dto;
+package br.com.financialtoolapi.application.dtos.in;
 
 public record UserCredentialsDto(String username, String password) {
 }
