@@ -41,7 +41,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/auth/login").permitAll()
                                 .requestMatchers("/auth/register").permitAll()
-                                .anyRequest().authenticated()
+                                .requestMatchers(HttpMethod.GET, "/expenseCategories", "/expenseCategories/*").authenticated()
                 ).oauth2ResourceServer(oauth2Configurer ->
                         oauth2Configurer.jwt(Customizer.withDefaults())
                                 .authenticationEntryPoint(authenticationEntryPoint)
