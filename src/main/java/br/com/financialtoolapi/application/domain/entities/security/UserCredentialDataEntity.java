@@ -21,15 +21,15 @@ public class UserCredentialDataEntity {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(unique = true, nullable = false)
     @ToString.Include
+    @Column(unique = true, nullable = false)
     private String username;
 
     @Column(nullable = false)
-    @ToString.Include
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ToString.Include
+    @OneToOne(cascade = { CascadeType.ALL })
     @JoinColumn(name = "user_account_id", nullable = false)
     private UserAccountEntity userAccount;
 }

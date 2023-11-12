@@ -17,6 +17,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -29,7 +30,9 @@ public class UserAccountEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = { CascadeType.ALL })
     @JoinColumn(name = "user_profile_id", nullable = false)
     private UserProfileDataEntity userProfileData;
+
+
 }

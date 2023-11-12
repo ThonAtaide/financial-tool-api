@@ -31,12 +31,16 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator:3.1.5")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
 
-    annotationProcessor("org.projectlombok:lombok")
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
     runtimeOnly("org.postgresql:postgresql")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    annotationProcessor("org.projectlombok:lombok")
+
+    testImplementation("com.h2database:h2:2.2.224")
+    testCompileOnly("org.projectlombok:lombok:1.18.30")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

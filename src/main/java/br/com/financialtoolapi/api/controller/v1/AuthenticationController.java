@@ -56,11 +56,10 @@ public class AuthenticationController {
                     .registerNewUser(this.userDataMapper.from(userRegisterRequest));
             return this.userLogin(new LoginRequestV1(userRegisterRequest.username(), userRegisterRequest.password()));
         } catch (ResourceCreationException ex) {
-            log.error(ex.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            log.error(String.valueOf(ex));
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ex.getMessage());
         }
     }
 
