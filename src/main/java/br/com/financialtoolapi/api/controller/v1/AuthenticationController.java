@@ -5,7 +5,9 @@ import br.com.financialtoolapi.api.controller.v1.request.LoginRequestV1;
 import br.com.financialtoolapi.api.controller.v1.request.UserRegisterRequestV1;
 import br.com.financialtoolapi.api.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.api.utils.CookieUtils;
-import br.com.financialtoolapi.application.exceptions.ResourceCreationException;
+import br.com.financialtoolapi.application.dtos.out.LoggedUserDataDto;
+import br.com.financialtoolapi.application.exceptions.UnexpectedInternalErrorException;
+import br.com.financialtoolapi.application.exceptions.ValidationDataException;
 import br.com.financialtoolapi.application.ports.in.security.LocalAuthenticationPort;
 import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
 import br.com.financialtoolapi.infrastructure.security.services.JwtService;
@@ -32,7 +34,9 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestV1 loginRequestV1) {
         try {
-            return this.userLogin(loginRequestV1);
+            final var authenticatedUser = localAuthenticationPort
+                    .login(userDataMapper.from(loginRequestV1));
+            return this.generateJwtTokenAndResponseEntityWithCookie(authenticatedUser);
         } catch (Exception ex) {
             log.error(ex.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -52,26 +56,35 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<?> registerNewUser(@RequestBody UserRegisterRequestV1 userRegisterRequest) {
         try {
-            localAuthenticationPort
+            final var createdUserAuthenticated = localAuthenticationPort
                     .registerNewUser(this.userDataMapper.from(userRegisterRequest));
-            return this.userLogin(new LoginRequestV1(userRegisterRequest.username(), userRegisterRequest.password()));
-        } catch (ResourceCreationException ex) {
+            return this.generateJwtTokenAndResponseEntityWithCookie(createdUserAuthenticated);
+        } catch (ValidationDataException ex) {
             log.error(String.valueOf(ex));
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(ex.getMessage());
+        } catch (UnexpectedInternalErrorException ex) {
+            log.error(String.valueOf(ex));
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ex.getMessage());
+        } catch (Exception ex) {
+            log.error(String.valueOf(ex));
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    private ResponseEntity<LoginResponseV1> userLogin(LoginRequestV1 loginRequestV1) {
-        final var authenticatedUser = localAuthenticationPort
-                .login(userDataMapper.from(loginRequestV1));
-        final String jwtToken = jwtService.buildToken(authenticatedUser.email());
+    private ResponseEntity<LoginResponseV1> generateJwtTokenAndResponseEntityWithCookie(
+            final LoggedUserDataDto loggedUserData
+            ) {
+        final String jwtToken = jwtService.buildToken(loggedUserData.email());
         final ResponseCookie cookie = CookieUtils
                 .buildCookieWith(jwtToken, jwtProperties.getTokenDurationSeconds());
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new LoginResponseV1(authenticatedUser.nickname()));
+                .body(new LoginResponseV1(loggedUserData.nickname()));
     }
 }

@@ -2,7 +2,6 @@ package br.com.financialtoolapi.application.validations.useregister;
 
 import br.com.financialtoolapi.application.domain.usecases.security.FindUserAccountByEmailUseCase;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
-import br.com.financialtoolapi.application.exceptions.ResourceCreationException;
 import br.com.financialtoolapi.application.exceptions.ValidationDataException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

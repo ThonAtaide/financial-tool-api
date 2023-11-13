@@ -2,9 +2,6 @@ package br.com.financialtoolapi.application.adapters.in.security;
 
 import br.com.financialtoolapi.application.domain.entities.security.UserAccountEntity;
 import br.com.financialtoolapi.application.domain.usecases.security.FindUserAccountByEmailUseCase;
-import br.com.financialtoolapi.application.domain.usecases.security.RegisterUserWithLocalCredentialsUseCase;
-import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
-import br.com.financialtoolapi.application.exceptions.ResourceCreationException;
 import br.com.financialtoolapi.application.exceptions.ResourceNotFoundException;
 import br.com.financialtoolapi.application.ports.in.security.UserAccountPort;
 import lombok.NonNull;

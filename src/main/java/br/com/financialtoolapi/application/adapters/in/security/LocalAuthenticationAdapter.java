@@ -5,8 +5,7 @@ import br.com.financialtoolapi.application.domain.usecases.security.RegisterUser
 import br.com.financialtoolapi.application.dtos.in.UserCredentialsDto;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
 import br.com.financialtoolapi.application.dtos.out.LoggedUserDataDto;
-import br.com.financialtoolapi.application.exceptions.ResourceCreationException;
-import br.com.financialtoolapi.application.exceptions.ValidationDataException;
+import br.com.financialtoolapi.application.exceptions.UnexpectedInternalErrorException;
 import br.com.financialtoolapi.application.ports.in.security.LocalAuthenticationPort;
 import br.com.financialtoolapi.application.ports.out.security.AuthenticationWrapper;
 import br.com.financialtoolapi.application.validations.useregister.UserRegisterValidation;
@@ -33,9 +32,9 @@ public class LocalAuthenticationAdapter implements LocalAuthenticationPort {
 
     @Override
     public LoggedUserDataDto registerNewUser(UserRegisterInputDto userRegister) {
+        userRegisterValidationList
+                .forEach(it -> it.validate(userRegister));
         try {
-            userRegisterValidationList
-                    .forEach(it -> it.validate(userRegister));
             final String encodePassword = authenticationWrapper.encodePassword(userRegister.password());
             return registerUserWithLocalCredentialsUseCase
                     .registerNewUserWithLocalCredentials(
@@ -46,12 +45,9 @@ public class LocalAuthenticationAdapter implements LocalAuthenticationPort {
                                     userRegister.email()
                             )
                     );
-        } catch (ValidationDataException ex) {
-            log.error(String.valueOf(ex));
-            throw new ResourceCreationException(ex.getMessage());
         } catch (UserPersistenceException ex) {
             log.error(String.valueOf(ex));
-            throw new ResourceCreationException("Houve um erro inesperado e o usuário não pode ser registrado. Por favor tente novamente.");
+            throw new UnexpectedInternalErrorException("Houve um erro inesperado e o usuário não pode ser registrado. Por favor tente novamente.");
         }
     }
 
