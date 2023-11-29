@@ -31,7 +31,7 @@ public class LocalAuthenticationAdapter implements LocalAuthenticationPort {
     }
 
     @Override
-    public LoggedUserDataDto registerNewUser(UserRegisterInputDto userRegister) {
+    public LoggedUserDataDto registerNewUser(final UserRegisterInputDto userRegister) {
         userInfoValidationList
                 .forEach(it -> it.validate(userRegister));
         try {

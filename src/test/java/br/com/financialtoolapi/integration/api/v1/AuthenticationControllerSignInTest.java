@@ -89,10 +89,10 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
             "and a error response describing the missing data from payload."
     )
     void testArgumentNotValidSignInWhenUsernameIsNull() {
-        final UserCredentialDataEntity userCredentialData = createUserAccountOnDatabase();
+        createUserAccountOnDatabase();
         final LoginRequestV1 loginRequestV1 = new LoginRequestV1(
                 null,
-                userCredentialData.getPassword()
+                null
         );
 
         ResponseEntity<ErrorResponseV1> response = restTemplate
@@ -109,6 +109,6 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
         assertThat(response.getBody().statusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus().value());
         assertThat(response.getBody().timestamp()).isNotNull();
         assertThat(response.getBody().instance()).isEqualTo(SIGN_IN_REQUEST_URL);
-        assertThat(response.getBody().errors().size()).isEqualTo(1);
+        assertThat(response.getBody().errors().size()).isEqualTo(2);
     }
 }

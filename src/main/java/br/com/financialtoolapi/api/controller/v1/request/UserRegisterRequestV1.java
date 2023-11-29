@@ -1,4 +1,14 @@
 package br.com.financialtoolapi.api.controller.v1.request;
 
-public record UserRegisterRequestV1(String username, String password, String email, String nickname) {
+import jakarta.validation.constraints.NotEmpty;
+
+public record UserRegisterRequestV1(
+        @NotEmpty(message = "Username field is required.")
+        String username,
+        @NotEmpty(message = "Password field is required.")
+        String password,
+        @NotEmpty(message = "E-mail field is required.")
+        String email,
+        @NotEmpty(message = "Nickname field is required.")
+        String nickname) {
 }

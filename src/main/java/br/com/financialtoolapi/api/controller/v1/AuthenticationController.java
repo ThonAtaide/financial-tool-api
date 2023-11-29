@@ -13,10 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,7 +38,7 @@ public class AuthenticationController {
     public ResponseEntity<?> login(@Valid @RequestBody final LoginRequestV1 loginRequestV1) {
         final var authenticatedUser = localAuthenticationPort
                 .login(userDataMapper.from(loginRequestV1));
-        return this.generateJwtTokenAndResponseEntityWithCookie(authenticatedUser);
+        return this.generateJwtTokenAndResponseEntityWithCookie(authenticatedUser, HttpStatus.OK);
     }
 
     @PostMapping("sign-out")
@@ -55,20 +52,21 @@ public class AuthenticationController {
     }
 
     @PostMapping("sign-up")
-    public ResponseEntity<?> registerNewUser(@RequestBody final UserRegisterRequestV1 userRegisterRequest) {
+    public ResponseEntity<?> registerNewUser(@Valid @RequestBody final UserRegisterRequestV1 userRegisterRequest) {
         final var createdUserAuthenticated = localAuthenticationPort
                 .registerNewUser(this.userDataMapper.from(userRegisterRequest));
-        return this.generateJwtTokenAndResponseEntityWithCookie(createdUserAuthenticated);
+        return this.generateJwtTokenAndResponseEntityWithCookie(createdUserAuthenticated, HttpStatus.CREATED);
     }
 
     private ResponseEntity<LoginResponseV1> generateJwtTokenAndResponseEntityWithCookie(
-            final LoggedUserDataDto loggedUserData
+            final LoggedUserDataDto loggedUserData,
+            final HttpStatus httpStatus
     ) {
         final String jwtToken = jwtService.buildToken(loggedUserData.email());
         final ResponseCookie cookie = CookieUtils
                 .buildCookieWith(jwtToken, jwtProperties.getTokenDurationSeconds());
         return ResponseEntity
-                .ok()
+                .status(httpStatus)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new LoginResponseV1(loggedUserData.nickname()));
     }
