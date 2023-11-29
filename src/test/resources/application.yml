@@ -16,3 +16,6 @@ financial-tool:
   jwt-properties:
     token-duration-seconds: 60
 
+logging:
+  level:
+    root: info

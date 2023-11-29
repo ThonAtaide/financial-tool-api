@@ -1,4 +1,4 @@
-package br.com.financialtoolapi.application.validations.useregister;
+package br.com.financialtoolapi.application.validations.userinfo;
 
 import br.com.financialtoolapi.application.domain.usecases.security.FindUserAccountByEmailUseCase;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ValidateIfEmailIsAvailable implements UserRegisterValidation {
+public class ValidateIfEmailIsAvailable implements UserInfoValidation {
 
     private final FindUserAccountByEmailUseCase findUserAccountByEmailUseCase;
 

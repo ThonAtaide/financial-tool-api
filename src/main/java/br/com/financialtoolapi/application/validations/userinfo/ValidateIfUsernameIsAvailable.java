@@ -1,4 +1,4 @@
-package br.com.financialtoolapi.application.validations.useregister;
+package br.com.financialtoolapi.application.validations.userinfo;
 
 import br.com.financialtoolapi.application.domain.usecases.security.FindUserCredentialDataByUsernameUseCase;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ValidateIfUsernameIsAvailable implements UserRegisterValidation{
+public class ValidateIfUsernameIsAvailable implements UserInfoValidation {
 
     private final FindUserCredentialDataByUsernameUseCase findUserCredentialDataByUsernameUseCase;
 

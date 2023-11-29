@@ -17,7 +17,7 @@ public class LocalAuthenticationService implements AuthenticationWrapper {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public LoggedUserDataDto authenticate(String username, String password) {
+    public LoggedUserDataDto authenticate(final String username, final String password) {
         final var credentials = new UsernamePasswordAuthenticationToken(username, password);
         final var authenticatedUser = (UserDetailsImpl) authenticationManager
                 .authenticate(credentials).getPrincipal();

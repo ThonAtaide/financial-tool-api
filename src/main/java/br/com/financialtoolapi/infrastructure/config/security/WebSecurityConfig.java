@@ -39,8 +39,9 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorizer ->
                         authorizer
                                 .requestMatchers("/actuator/**").permitAll()
-                                .requestMatchers("/auth/login").permitAll()
-                                .requestMatchers("/auth/register").permitAll()
+                                .requestMatchers("/sign-in").permitAll()
+                                .requestMatchers("/sign-out").permitAll()
+                                .requestMatchers("/sign-up").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/expenseCategories", "/expenseCategories/*").authenticated()
                 ).oauth2ResourceServer(oauth2Configurer ->
                         oauth2Configurer.jwt(Customizer.withDefaults())

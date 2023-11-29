@@ -24,7 +24,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             final HttpServletRequest request,
             final HttpServletResponse response,
             final AuthenticationException authException
-    ) throws IOException, ServletException {
+    ) throws IOException {
         final Map<Object, String> responseBody = Map.of(HttpStatus.UNAUTHORIZED, "User authentication failed.");
 
         final var cookie = ResponseCookie.from(CookieUtils.ACCESS_TOKEN_COOKIE, null)

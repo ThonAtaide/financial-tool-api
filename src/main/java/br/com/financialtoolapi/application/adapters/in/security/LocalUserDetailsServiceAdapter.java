@@ -8,6 +8,7 @@ import br.com.financialtoolapi.application.ports.in.security.LocalUserDetailsSer
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +23,7 @@ public class LocalUserDetailsServiceAdapter implements LocalUserDetailsServicePo
         return findUserCredentialDataByUsernameUseCase
                 .findUserCredentialsByUsername(username)
                 .map(authenticationMapper::toUserLoginOutputDto)
-                .orElseThrow(() -> new ResourceNotFoundException(
+                .orElseThrow(() -> new UsernameNotFoundException(
                                 String.format("User from username %s was not found", username)
                         )
                 );

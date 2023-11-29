@@ -8,7 +8,7 @@ import br.com.financialtoolapi.application.dtos.out.LoggedUserDataDto;
 import br.com.financialtoolapi.application.exceptions.UnexpectedInternalErrorException;
 import br.com.financialtoolapi.application.ports.in.security.LocalAuthenticationPort;
 import br.com.financialtoolapi.application.ports.out.security.AuthenticationWrapper;
-import br.com.financialtoolapi.application.validations.useregister.UserRegisterValidation;
+import br.com.financialtoolapi.application.validations.userinfo.UserInfoValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import java.util.List;
 public class LocalAuthenticationAdapter implements LocalAuthenticationPort {
 
     private final AuthenticationWrapper authenticationWrapper;
-    private final List<UserRegisterValidation> userRegisterValidationList;
+    private final List<UserInfoValidation> userInfoValidationList;
     private final RegisterUserWithLocalCredentialsUseCase registerUserWithLocalCredentialsUseCase;
 
     @Override
@@ -32,15 +32,15 @@ public class LocalAuthenticationAdapter implements LocalAuthenticationPort {
 
     @Override
     public LoggedUserDataDto registerNewUser(UserRegisterInputDto userRegister) {
-        userRegisterValidationList
+        userInfoValidationList
                 .forEach(it -> it.validate(userRegister));
         try {
-            final String encodePassword = authenticationWrapper.encodePassword(userRegister.password());
+            final String encodedPassword = authenticationWrapper.encodePassword(userRegister.password());
             return registerUserWithLocalCredentialsUseCase
                     .registerNewUserWithLocalCredentials(
                             new UserRegisterInputDto(
                                     userRegister.username(),
-                                    encodePassword,
+                                    encodedPassword,
                                     userRegister.nickname(),
                                     userRegister.email()
                             )

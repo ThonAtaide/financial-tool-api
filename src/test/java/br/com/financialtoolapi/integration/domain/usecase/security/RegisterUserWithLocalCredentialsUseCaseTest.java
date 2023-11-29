@@ -34,6 +34,7 @@ public class RegisterUserWithLocalCredentialsUseCaseTest extends AbstractIntegra
                 .findUserByUsernameEquals(userRegisterInput.username())
                 .orElse(null);
 
+        assertThat(createdUser).isNotNull();
         assertThat(createdUser.getUsername()).isEqualTo(userRegisterInput.username());
         assertThat(createdUser.getPassword()).isEqualTo(userRegisterInput.password());
         assertThat(createdUser.getUserAccount().getEmail()).isEqualTo(userRegisterInput.email());

@@ -6,15 +6,17 @@ import br.com.financialtoolapi.api.controller.v1.request.UserRegisterRequestV1;
 import br.com.financialtoolapi.api.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.api.utils.CookieUtils;
 import br.com.financialtoolapi.application.dtos.out.LoggedUserDataDto;
-import br.com.financialtoolapi.application.exceptions.UnexpectedInternalErrorException;
-import br.com.financialtoolapi.application.exceptions.ValidationDataException;
 import br.com.financialtoolapi.application.ports.in.security.LocalAuthenticationPort;
 import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
 import br.com.financialtoolapi.infrastructure.security.services.JwtService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/auth", consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(
+        value = "/",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE
+)
 public class AuthenticationController {
 
     private final JwtService jwtService;
@@ -31,19 +37,14 @@ public class AuthenticationController {
     private final LocalAuthenticationPort localAuthenticationPort;
     private final UserDataMapper userDataMapper = Mappers.getMapper(UserDataMapper.class);
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestV1 loginRequestV1) {
-        try {
-            final var authenticatedUser = localAuthenticationPort
-                    .login(userDataMapper.from(loginRequestV1));
-            return this.generateJwtTokenAndResponseEntityWithCookie(authenticatedUser);
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    @PostMapping("sign-in")
+    public ResponseEntity<?> login(@Valid @RequestBody final LoginRequestV1 loginRequestV1) {
+        final var authenticatedUser = localAuthenticationPort
+                .login(userDataMapper.from(loginRequestV1));
+        return this.generateJwtTokenAndResponseEntityWithCookie(authenticatedUser);
     }
 
-    @PostMapping("/logout")
+    @PostMapping("sign-out")
     public ResponseEntity<?> logout() {
         final ResponseCookie cookie = CookieUtils
                 .buildCookieWith(null, jwtProperties.getTokenDurationSeconds());
@@ -53,32 +54,16 @@ public class AuthenticationController {
                 .build();
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerNewUser(@RequestBody UserRegisterRequestV1 userRegisterRequest) {
-        try {
-            final var createdUserAuthenticated = localAuthenticationPort
-                    .registerNewUser(this.userDataMapper.from(userRegisterRequest));
-            return this.generateJwtTokenAndResponseEntityWithCookie(createdUserAuthenticated);
-        } catch (ValidationDataException ex) {
-            log.error(String.valueOf(ex));
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(ex.getMessage());
-        } catch (UnexpectedInternalErrorException ex) {
-            log.error(String.valueOf(ex));
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ex.getMessage());
-        } catch (Exception ex) {
-            log.error(String.valueOf(ex));
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    @PostMapping("sign-up")
+    public ResponseEntity<?> registerNewUser(@RequestBody final UserRegisterRequestV1 userRegisterRequest) {
+        final var createdUserAuthenticated = localAuthenticationPort
+                .registerNewUser(this.userDataMapper.from(userRegisterRequest));
+        return this.generateJwtTokenAndResponseEntityWithCookie(createdUserAuthenticated);
     }
 
     private ResponseEntity<LoginResponseV1> generateJwtTokenAndResponseEntityWithCookie(
             final LoggedUserDataDto loggedUserData
-            ) {
+    ) {
         final String jwtToken = jwtService.buildToken(loggedUserData.email());
         final ResponseCookie cookie = CookieUtils
                 .buildCookieWith(jwtToken, jwtProperties.getTokenDurationSeconds());
