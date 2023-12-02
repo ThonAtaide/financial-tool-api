@@ -40,9 +40,9 @@ public class WebSecurityConfig {
                         authorizer
                                 .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/sign-in").permitAll()
-                                .requestMatchers("/sign-out").permitAll()
                                 .requestMatchers("/sign-up").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/expenseCategories", "/expenseCategories/*").authenticated()
+                                .anyRequest().authenticated()
                 ).oauth2ResourceServer(oauth2Configurer ->
                         oauth2Configurer.jwt(Customizer.withDefaults())
                                 .authenticationEntryPoint(authenticationEntryPoint)

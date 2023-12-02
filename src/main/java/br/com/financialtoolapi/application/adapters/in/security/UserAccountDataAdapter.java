@@ -23,6 +23,7 @@ public class UserAccountDataAdapter implements UserAccountPort {
                 .map(UserAccountEntity::getId)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
+                                "E-mail alterado e por isso é preciso logar novamente.", //TODO tratar pois não é legal usuário perder sessão por trocar email
                                 String.format("Não foi possível encontrar uma conta vinculada ao email %s", email))
                 );
     }

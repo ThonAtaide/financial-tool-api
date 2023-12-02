@@ -10,10 +10,10 @@ public class CookieUtils {
 
     public ResponseCookie buildCookieWith(
             final String token,
-            final Long cookieDuration
+            final Long cookieDurationSeconds
     ) {
         return ResponseCookie.from(ACCESS_TOKEN_COOKIE, token)
-                .maxAge(cookieDuration)
+                .maxAge(cookieDurationSeconds)
                 .httpOnly(true)
                 .path("/")
                 .build();

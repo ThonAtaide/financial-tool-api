@@ -18,6 +18,7 @@ public class ValidateIfEmailIsAvailable implements UserInfoValidation {
                 .fetchUserAccountByEmail(userRegister.email())
                 .ifPresent(it -> {
                     throw new ValidationDataException(
+                            "Este e-mail já está sendo utilizado por outro usuário.",
                             String.format("O email %s já está sendo utilizado e portanto o usuário não pôde ser criado.", userRegister.email())
                     );
                 });

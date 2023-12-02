@@ -29,7 +29,7 @@ public class ExceptionHandlerV1 {
             HttpServletRequest request, ValidationDataException ex
     ) {
         final ErrorResponseV1 errorResponse = new ErrorResponseV1(
-                PAYLOAD_DATA_VALIDATION_FAIL.getTitle(),
+                ex.getUserFriendlyMessage(),
                 PAYLOAD_DATA_VALIDATION_FAIL,
                 PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus().value(),
                 extractRequestUri(request),
@@ -80,7 +80,26 @@ public class ExceptionHandlerV1 {
                 .body(errorResponse);
     }
 
-    @ExceptionHandler(value = {Exception.class, UnexpectedInternalErrorException.class})
+    @ExceptionHandler(value = {UnexpectedInternalErrorException.class})
+    protected ResponseEntity<Object> handleUnexpectedException(
+            HttpServletRequest request, UnexpectedInternalErrorException ex
+    ) {
+        final String errorIdentifier = UUID.randomUUID().toString();
+        log.error(String.format("Unexpected error %s - ", errorIdentifier).concat(ex.getMessage()));
+        final ErrorResponseV1 errorResponse = new ErrorResponseV1(
+                ex.getUserFriendlyMessage(),
+                UNEXPECTED_INTERNAL_ERROR,
+                UNEXPECTED_INTERNAL_ERROR.getHttpStatus().value(),
+                extractRequestUri(request),
+                Instant.now(),
+                List.of("Erro inesperado, contacte o administrador ")
+        );
+        return ResponseEntity
+                .status(UNEXPECTED_INTERNAL_ERROR.getHttpStatus())
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(value = {Exception.class})
     protected ResponseEntity<Object> handleException(
             HttpServletRequest request, Exception ex
     ) {

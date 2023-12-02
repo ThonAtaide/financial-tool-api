@@ -68,6 +68,7 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
                         ErrorResponseV1.class
                 );
 
+
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus());
         assertThat(response.getBody().title()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getTitle());

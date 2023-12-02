@@ -1,10 +1,14 @@
 package br.com.financialtoolapi.infrastructure.config.security;
 
+import br.com.financialtoolapi.api.ErrorType;
+import br.com.financialtoolapi.api.controller.v1.response.ErrorResponseV1;
 import br.com.financialtoolapi.api.utils.CookieUtils;
+import br.com.financialtoolapi.infrastructure.config.security.resolvers.BearerTokenCookieResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +21,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override

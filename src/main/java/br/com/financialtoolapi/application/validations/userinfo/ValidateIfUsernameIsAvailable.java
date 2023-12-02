@@ -18,7 +18,10 @@ public class ValidateIfUsernameIsAvailable implements UserInfoValidation {
         findUserCredentialDataByUsernameUseCase
                 .findUserCredentialsByUsername(userRegister.username())
                 .ifPresent(it -> {
-                    throw new ValidationDataException("O nome de usuário informado já está sendo utilizado.");
+                    throw new ValidationDataException(
+                            "O nome de usuário informado já está sendo utilizado.",
+                            "O nome de usuário informado já está sendo utilizado e portanto o usuário na foi criado."
+                    );
                 });
     }
 }

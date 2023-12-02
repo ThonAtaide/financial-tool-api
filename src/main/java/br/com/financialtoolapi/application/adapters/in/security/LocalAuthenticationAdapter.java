@@ -47,7 +47,10 @@ public class LocalAuthenticationAdapter implements LocalAuthenticationPort {
                     );
         } catch (UserPersistenceException ex) {
             log.error(String.valueOf(ex));
-            throw new UnexpectedInternalErrorException("Houve um erro inesperado e o usuário não pode ser registrado. Por favor tente novamente.");
+            throw new UnexpectedInternalErrorException(
+                    "Houve um erro e seu usuário não foi criado, por favor tente novamente.",
+                    "Houve um erro inesperado e o usuário não pode ser registrado. Por favor tente novamente."
+            );
         }
     }
 

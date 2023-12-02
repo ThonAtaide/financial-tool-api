@@ -35,14 +35,14 @@ public class AuthenticationController {
     private final UserDataMapper userDataMapper = Mappers.getMapper(UserDataMapper.class);
 
     @PostMapping("sign-in")
-    public ResponseEntity<?> login(@Valid @RequestBody final LoginRequestV1 loginRequestV1) {
+    public ResponseEntity<LoginResponseV1> login(@Valid @RequestBody final LoginRequestV1 loginRequestV1) {
         final var authenticatedUser = localAuthenticationPort
                 .login(userDataMapper.from(loginRequestV1));
         return this.generateJwtTokenAndResponseEntityWithCookie(authenticatedUser, HttpStatus.OK);
     }
 
     @PostMapping("sign-out")
-    public ResponseEntity<?> logout() {
+    public ResponseEntity<Void> logout() {
         final ResponseCookie cookie = CookieUtils
                 .buildCookieWith(null, jwtProperties.getTokenDurationSeconds());
         return ResponseEntity
@@ -52,7 +52,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("sign-up")
-    public ResponseEntity<?> registerNewUser(@Valid @RequestBody final UserRegisterRequestV1 userRegisterRequest) {
+    public ResponseEntity<LoginResponseV1> registerNewUser(@Valid @RequestBody final UserRegisterRequestV1 userRegisterRequest) {
         final var createdUserAuthenticated = localAuthenticationPort
                 .registerNewUser(this.userDataMapper.from(userRegisterRequest));
         return this.generateJwtTokenAndResponseEntityWithCookie(createdUserAuthenticated, HttpStatus.CREATED);
