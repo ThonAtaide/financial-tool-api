@@ -103,7 +103,7 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
 
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus());
-        assertThat(response.getBody().title()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getTitle());
+        assertThat(response.getBody().title()).isEqualTo("O nome de usuário informado já está sendo utilizado.");
         assertThat(response.getBody().errorType()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL);
         assertThat(response.getBody().statusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus().value());
         assertThat(response.getBody().timestamp()).isNotNull();
