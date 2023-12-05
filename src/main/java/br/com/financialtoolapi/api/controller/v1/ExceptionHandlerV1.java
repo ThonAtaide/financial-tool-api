@@ -1,14 +1,17 @@
 package br.com.financialtoolapi.api.controller.v1;
 
+import br.com.financialtoolapi.api.ErrorType;
 import br.com.financialtoolapi.api.controller.v1.response.ErrorResponseV1;
 import br.com.financialtoolapi.application.exceptions.UnexpectedInternalErrorException;
 import br.com.financialtoolapi.application.exceptions.ValidationDataException;
+import br.com.financialtoolapi.application.utils.InternationalizationUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,19 +25,22 @@ import static br.com.financialtoolapi.api.ErrorType.*;
 
 @Slf4j
 @ControllerAdvice
+@RequiredArgsConstructor
 public class ExceptionHandlerV1 {
+
+    public static final String UNIDENTIFIED_ERROR_DEVELOPER_MESSAGE = "Unexpected error, contact administrator with correlation id %s";
+    public static final String ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE = "Payload didn't attend the expectations and request couldn't be reached.";
+    private final MessageSource messageSource;
 
     @ExceptionHandler(ValidationDataException.class)
     protected ResponseEntity<Object> handleValidationDataException(
-            HttpServletRequest request, ValidationDataException ex
+            final HttpServletRequest request, final ValidationDataException ex
     ) {
-        final ErrorResponseV1 errorResponse = new ErrorResponseV1(
-                ex.getUserFriendlyMessage(),
+        final ErrorResponseV1 errorResponse = buildErrorResponse(
                 PAYLOAD_DATA_VALIDATION_FAIL,
-                PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus().value(),
-                extractRequestUri(request),
-                Instant.now(),
-                List.of(ex.getMessage())
+                request,
+                List.of(ex.getUserFriendlyMessage()),
+                ex.getMessage()
         );
         return ResponseEntity
                 .status(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus())
@@ -43,15 +49,13 @@ public class ExceptionHandlerV1 {
 
     @ExceptionHandler(BadCredentialsException.class)
     protected ResponseEntity<Object> handleBadCredentials(
-            HttpServletRequest request, BadCredentialsException ex
+            final HttpServletRequest request, final BadCredentialsException ex
     ) {
-        final ErrorResponseV1 errorResponse = new ErrorResponseV1(
-                AUTHENTICATION_FAIL_BAD_CREDENTIALS.getTitle(),
+        final ErrorResponseV1 errorResponse = buildErrorResponse(
                 AUTHENTICATION_FAIL_BAD_CREDENTIALS,
-                AUTHENTICATION_FAIL_BAD_CREDENTIALS.getHttpStatus().value(),
-                extractRequestUri(request),
-                Instant.now(),
-                List.of(ex.getMessage())
+                request,
+                List.of(),
+                ex.getMessage()
         );
         return ResponseEntity
                 .status(AUTHENTICATION_FAIL_BAD_CREDENTIALS.getHttpStatus())
@@ -60,20 +64,19 @@ public class ExceptionHandlerV1 {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            HttpServletRequest request, MethodArgumentNotValidException ex
+            final HttpServletRequest request, final MethodArgumentNotValidException ex
     ) {
         final List<String> errorMessages = ex.getBindingResult()
                 .getAllErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
-        final ErrorResponseV1 errorResponse = new ErrorResponseV1(
-                PAYLOAD_DATA_VALIDATION_FAIL.getTitle(),
+
+        final ErrorResponseV1 errorResponse = buildErrorResponse(
                 PAYLOAD_DATA_VALIDATION_FAIL,
-                PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus().value(),
-                extractRequestUri(request),
-                Instant.now(),
-                errorMessages
+                request,
+                errorMessages,
+                ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE
         );
         return ResponseEntity
                 .status(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus())
@@ -82,17 +85,16 @@ public class ExceptionHandlerV1 {
 
     @ExceptionHandler(value = {UnexpectedInternalErrorException.class})
     protected ResponseEntity<Object> handleUnexpectedException(
-            HttpServletRequest request, UnexpectedInternalErrorException ex
+            final HttpServletRequest request, final UnexpectedInternalErrorException ex
     ) {
         final String errorIdentifier = UUID.randomUUID().toString();
         log.error(String.format("Unexpected error %s - ", errorIdentifier).concat(ex.getMessage()));
-        final ErrorResponseV1 errorResponse = new ErrorResponseV1(
-                ex.getUserFriendlyMessage(),
+
+        final ErrorResponseV1 errorResponse = buildErrorResponse(
                 UNEXPECTED_INTERNAL_ERROR,
-                UNEXPECTED_INTERNAL_ERROR.getHttpStatus().value(),
-                extractRequestUri(request),
-                Instant.now(),
-                List.of("Erro inesperado, contacte o administrador ")
+                request,
+                List.of(ex.getUserFriendlyMessage()),
+                String.format(UNIDENTIFIED_ERROR_DEVELOPER_MESSAGE, errorIdentifier)
         );
         return ResponseEntity
                 .status(UNEXPECTED_INTERNAL_ERROR.getHttpStatus())
@@ -105,17 +107,34 @@ public class ExceptionHandlerV1 {
     ) {
         final String errorIdentifier = UUID.randomUUID().toString();
         log.error(String.format("Unexpected error %s - ", errorIdentifier).concat(ex.getMessage()));
-        final ErrorResponseV1 errorResponse = new ErrorResponseV1(
-                UNEXPECTED_INTERNAL_ERROR.getTitle(),
+
+        final ErrorResponseV1 errorResponse = buildErrorResponse(
                 UNEXPECTED_INTERNAL_ERROR,
-                UNEXPECTED_INTERNAL_ERROR.getHttpStatus().value(),
-                extractRequestUri(request),
-                Instant.now(),
-                List.of("Erro inesperado, contacte o administrador ")
+                request,
+                List.of(),
+                String.format(UNIDENTIFIED_ERROR_DEVELOPER_MESSAGE, errorIdentifier)
         );
         return ResponseEntity
                 .status(UNEXPECTED_INTERNAL_ERROR.getHttpStatus())
                 .body(errorResponse);
+    }
+
+    private ErrorResponseV1 buildErrorResponse(
+            final ErrorType errorType,
+            final HttpServletRequest request,
+            final List<String> userFriendlyErrorMessages,
+            final String developerMessage
+    ) {
+        final String title = getErrorMessage(errorType.getTitleMessageCode());
+        return new ErrorResponseV1(
+                title,
+                userFriendlyErrorMessages,
+                errorType,
+                errorType.getHttpStatus().value(),
+                extractRequestUri(request),
+                Instant.now(),
+                developerMessage
+        );
     }
 
     private String extractRequestUri(final HttpServletRequest request) {
@@ -123,5 +142,9 @@ public class ExceptionHandlerV1 {
                 .ofNullable(request)
                 .map(HttpServletRequest::getServletPath)
                 .orElse("");
+    }
+
+    private String getErrorMessage(final String messageCode, final Object... args) {
+        return InternationalizationUtils.getMessage(messageSource, messageCode, args);
     }
 }

@@ -7,6 +7,8 @@ import br.com.financialtoolapi.application.domain.entities.security.UserCredenti
 import br.com.financialtoolapi.integration.api.AbstractApiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +18,16 @@ import java.util.UUID;
 
 import static br.com.financialtoolapi.api.ErrorType.AUTHENTICATION_FAIL_BAD_CREDENTIALS;
 import static br.com.financialtoolapi.api.ErrorType.PAYLOAD_DATA_VALIDATION_FAIL;
+import static br.com.financialtoolapi.api.controller.v1.ExceptionHandlerV1.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
 import static br.com.financialtoolapi.api.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class AuthenticationControllerSignInTest extends AbstractApiTest {
 
     private static final String SIGN_IN_REQUEST_URL = "/sign-in";
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Test
     @DisplayName("Given that user has a valid an active account " +
@@ -59,12 +65,13 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
             )
     void testBadCredentialsSignInWhenUsernameIsWrong() {
         final UserCredentialDataEntity userCredentialData = createUserAccountOnDatabase();
+        final String expectedErrorTitle = "Invalid username or password.";
         final LoginRequestV1 loginRequestV1 = new LoginRequestV1(
                 UUID.randomUUID().toString(),
                 userCredentialData.getPassword()
         );
 
-        ResponseEntity<ErrorResponseV1> response = restTemplate
+        final ResponseEntity<ErrorResponseV1> response = restTemplate
                 .postForEntity(
                         concatServerUrlWithResourcePath(SIGN_IN_REQUEST_URL),
                         loginRequestV1,
@@ -73,23 +80,29 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
 
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(AUTHENTICATION_FAIL_BAD_CREDENTIALS.getHttpStatus());
-        assertThat(response.getBody().title()).isEqualTo(AUTHENTICATION_FAIL_BAD_CREDENTIALS.getTitle());
+        assertThat(response.getBody().title()).isEqualTo(expectedErrorTitle);
         assertThat(response.getBody().errorType()).isEqualTo(AUTHENTICATION_FAIL_BAD_CREDENTIALS);
         assertThat(response.getBody().statusCode()).isEqualTo(AUTHENTICATION_FAIL_BAD_CREDENTIALS.getHttpStatus().value());
         assertThat(response.getBody().timestamp()).isNotNull();
         assertThat(response.getBody().instance()).isEqualTo(SIGN_IN_REQUEST_URL);
-        assertThat(response.getBody().errors().size()).isEqualTo(1);
+        assertThat(response.getBody().errors().size()).isEqualTo(0);
+        assertThat(response.getBody().developerInfo()).isNotNull();
 
     }
 
     @Test
     @DisplayName("Given that user has a valid an active account " +
-            "When user try sign in without inform the username " +
+            "When user try sign in without inform the username and password" +
             "Then api should return https status BAD REQUEST, " +
             "and a error response describing the missing data from payload."
     )
-    void testArgumentNotValidSignInWhenUsernameIsNull() {
+    void testArgumentNotValidSignInWhenUsernameAndPasswordIsNull() {
         createUserAccountOnDatabase();
+        final String expectedErrorTitle = "Invalid or incomplete data.";
+        final List<String> expectedMessages = List.of(
+                "Username is required for signing.",
+                "Password is required for signing."
+        );
         final LoginRequestV1 loginRequestV1 = new LoginRequestV1(
                 null,
                 null
@@ -104,11 +117,12 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
 
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus());
-        assertThat(response.getBody().title()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getTitle());
+        assertThat(response.getBody().title()).isEqualTo(expectedErrorTitle);
         assertThat(response.getBody().errorType()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL);
         assertThat(response.getBody().statusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus().value());
         assertThat(response.getBody().timestamp()).isNotNull();
         assertThat(response.getBody().instance()).isEqualTo(SIGN_IN_REQUEST_URL);
-        assertThat(response.getBody().errors().size()).isEqualTo(2);
+        assertThat(response.getBody().errors().containsAll(expectedMessages)).isTrue();
+        assertThat(response.getBody().developerInfo()).isEqualTo(ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE);
     }
 }

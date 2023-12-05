@@ -7,10 +7,11 @@ import java.util.List;
 
 public record ErrorResponseV1(
         String title,
+        List<String> errors,
         ErrorType errorType,
         int statusCode,
         String instance,
         Instant timestamp,
-        List<String> errors
+        String developerInfo
         ) {
 }

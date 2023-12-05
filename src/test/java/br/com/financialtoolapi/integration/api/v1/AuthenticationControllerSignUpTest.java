@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import static br.com.financialtoolapi.api.ErrorType.PAYLOAD_DATA_VALIDATION_FAIL;
 import static br.com.financialtoolapi.api.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
+import static br.com.financialtoolapi.application.validations.userinfo.ValidateIfUsernameIsAvailable.DETAILED_ERROR_MESSAGE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class AuthenticationControllerSignUpTest extends AbstractApiTest {
@@ -71,7 +72,7 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
 
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus());
-        assertThat(response.getBody().title()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getTitle());
+        assertThat(response.getBody().title()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getTitleMessageCode());
         assertThat(response.getBody().errorType()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL);
         assertThat(response.getBody().statusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus().value());
         assertThat(response.getBody().timestamp()).isNotNull();
@@ -86,6 +87,8 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
             "and a error response describing validation data error."
     )
     void testWhenUserSignUpPayloadHasAUsernameAlreadyUsedByOtherUser() {
+        final String expectedErrorTitle = "Invalid or incomplete data.";
+        final List<String> expectedErrorMessages = List.of("The username is already taken.");
         final UserCredentialDataEntity userCredentialData = createUserAccountOnDatabase();
         final UserRegisterRequestV1 userRegisterRequest = new UserRegisterRequestV1(
                 userCredentialData.getUsername(),
@@ -103,12 +106,13 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
 
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus());
-        assertThat(response.getBody().title()).isEqualTo("O nome de usuário informado já está sendo utilizado.");
+        assertThat(response.getBody().title()).isEqualTo(expectedErrorTitle);
         assertThat(response.getBody().errorType()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL);
         assertThat(response.getBody().statusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus().value());
         assertThat(response.getBody().timestamp()).isNotNull();
         assertThat(response.getBody().instance()).isEqualTo(SIGN_UP_REQUEST_URL);
-        assertThat(response.getBody().errors().size()).isEqualTo(1);
+        assertThat(response.getBody().errors().containsAll(expectedErrorMessages)).isTrue();
+        assertThat(response.getBody().developerInfo()).isEqualTo(String.format(DETAILED_ERROR_MESSAGE, userRegisterRequest.username()));
 
     }
 }

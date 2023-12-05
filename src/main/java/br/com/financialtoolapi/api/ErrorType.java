@@ -10,11 +10,10 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public enum ErrorType {
 
-    AUTHENTICATION_FAIL_BAD_CREDENTIALS("Usuário ou senha incorretos.", UNAUTHORIZED),
-    AUTHORIZATION_FAIL("Sessão expirada.", UNAUTHORIZED),
-    PAYLOAD_DATA_VALIDATION_FAIL("Informações inválidas ou incompletas", BAD_REQUEST),
-    UNEXPECTED_INTERNAL_ERROR("Houve um erro inesperado. Por favor, tente novamente.", INTERNAL_SERVER_ERROR);
+    AUTHENTICATION_FAIL_BAD_CREDENTIALS("sign-in.bad-credentials.error-title", UNAUTHORIZED),
+    PAYLOAD_DATA_VALIDATION_FAIL("sign-up.data-validation.error-title", BAD_REQUEST),
+    UNEXPECTED_INTERNAL_ERROR("unexpected.error-title", INTERNAL_SERVER_ERROR);
 
-    private final String title;
+    private final String titleMessageCode;
     private final HttpStatus httpStatus;
 }
