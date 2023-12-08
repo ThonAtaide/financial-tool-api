@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static br.com.financialtoolapi.api.ErrorType.PAYLOAD_DATA_VALIDATION_FAIL;
+import static br.com.financialtoolapi.api.controller.v1.ExceptionHandlerV1.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
 import static br.com.financialtoolapi.api.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
 import static br.com.financialtoolapi.application.validations.userinfo.ValidateIfUsernameIsAvailable.DETAILED_ERROR_MESSAGE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -29,7 +30,7 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
             "Then api should return https status created, a payload with nickname " +
             "And a token on cookie")
     void testSuccessfullySignUpWhenUserInsertAValidPayload() {
-        final String nickname = UUID.randomUUID().toString();
+        final String nickname = UUID.randomUUID().toString().substring(0, 9);
         final var userRegisterRequest = new UserRegisterRequestV1(
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(),
@@ -59,6 +60,7 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
             "and a error response describing the missing data from payload."
     )
     void testArgumentNotValidSignInWhenFieldsAreNull() {
+        final var expectedErrorTitle = "Invalid or incomplete data.";
         final UserRegisterRequestV1 userRegisterRequest =
                 new UserRegisterRequestV1(null, null, null, null);
 
@@ -69,15 +71,15 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
                         ErrorResponseV1.class
                 );
 
-
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus());
-        assertThat(response.getBody().title()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getTitleMessageCode());
+        assertThat(response.getBody().title()).isEqualTo(expectedErrorTitle);
+        assertThat(response.getBody().developerInfo()).isEqualTo(ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE);
+        assertThat(response.getBody().errors().size()).isEqualTo(4);
         assertThat(response.getBody().errorType()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL);
         assertThat(response.getBody().statusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus().value());
         assertThat(response.getBody().timestamp()).isNotNull();
         assertThat(response.getBody().instance()).isEqualTo(SIGN_UP_REQUEST_URL);
-        assertThat(response.getBody().errors().size()).isEqualTo(4);
     }
 
     @Test
@@ -94,7 +96,7 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
                 userCredentialData.getUsername(),
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(),
-                UUID.randomUUID().toString()
+                UUID.randomUUID().toString().substring(0, 9)
         );
 
         ResponseEntity<ErrorResponseV1> response = restTemplate
