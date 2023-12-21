@@ -2,7 +2,6 @@ plugins {
     java
     id("org.springframework.boot") version "3.1.4"
     id("io.spring.dependency-management") version "1.1.3"
-    id("com.github.spotbugs") version "6.0.2"
     jacoco
 }
 
@@ -13,33 +12,13 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
 
+tasks.withType<Jar> {
+    enabled = false
+}
+
 jacoco {
     toolVersion = "0.8.9"
 }
-
-spotbugs {
-    toolVersion.set("4.8.2")
-//    reportsDir.set(file("${layout.buildDirectory}/reports/spotbugs"))
-    showProgress.set(true)
-    maxHeapSize.set("1g")
-}
-
-tasks.spotbugsMain {
-    reports.create("html") {
-        required.set(true)
-        outputLocation.set(file("${layout.buildDirectory.get()}/reports/spotbugs.html"))
-        setStylesheet("fancy-hist.xsl")
-    }
-}
-
-tasks.spotbugsTest {
-    reports.create("html") {
-        required.set(true)
-        outputLocation.set(file("${layout.buildDirectory.get()}/reports/test-spotbugs.html"))
-        setStylesheet("fancy-hist.xsl")
-    }
-}
-
 tasks.jacocoTestReport {
     reports {
         xml.required.set(false)

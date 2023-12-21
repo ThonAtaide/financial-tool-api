@@ -44,7 +44,7 @@ public class AuthenticationController {
     @PostMapping("sign-out")
     public ResponseEntity<Void> logout() {
         final ResponseCookie cookie = CookieUtils
-                .buildCookieWith(null, jwtProperties.getTokenDurationSeconds());
+                .buildCookieWith("null", 0L);
         return ResponseEntity
                 .noContent()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())

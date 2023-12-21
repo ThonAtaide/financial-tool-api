@@ -37,7 +37,7 @@ public class HeaderAppenderFilter implements Filter {
                 final CustomRequestWrapper customRequestWrapper = appendAccountIdIntoHeader(request);
                 chain.doFilter(customRequestWrapper, response);
             } catch (ResourceNotFoundException ex) {
-                ResponseCookie tokenCookieClean = CookieUtils.buildCookieWith(null, jwtProperties.getTokenDurationSeconds());
+                ResponseCookie tokenCookieClean = CookieUtils.buildCookieWith("", 0L);
                 HttpServletResponse httpServletResponse = (HttpServletResponse) response;
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 httpServletResponse.getWriter().write("Token expirada.");

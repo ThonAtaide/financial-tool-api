@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 @Configuration
 public class JwtConfig {
 
-    private final String secret = "sdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsd";
+    private static final String secret = "sdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsdsdhjsd";
 
     @Bean
     public JwtEncoder jwtEncoder() {
