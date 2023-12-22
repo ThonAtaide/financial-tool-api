@@ -1,13 +1,16 @@
 package br.com.financialtoolapi.infrastructure.config.security.filters;
 
+import br.com.financialtoolapi.api.ErrorType;
 import br.com.financialtoolapi.api.utils.CookieUtils;
 import br.com.financialtoolapi.application.exceptions.ResourceNotFoundException;
 import br.com.financialtoolapi.application.ports.in.security.UserAccountPort;
+import br.com.financialtoolapi.application.utils.InternationalizationUtils;
 import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
@@ -24,7 +27,7 @@ public class HeaderAppenderFilter implements Filter {
     public static final String JWT_SUBJECT = "sub";
     public static final String X_USER_IDENTIFIER_HEADER = "x_user_identifier_header";
     private final UserAccountPort userAccountPort;
-    private final JwtProperties jwtProperties;
+    private final MessageSource messageSource;
 
     @Override
     public void doFilter(
@@ -37,16 +40,18 @@ public class HeaderAppenderFilter implements Filter {
                 final CustomRequestWrapper customRequestWrapper = appendAccountIdIntoHeader(request);
                 chain.doFilter(customRequestWrapper, response);
             } catch (ResourceNotFoundException ex) {
+                final String errorMessage = InternationalizationUtils.getMessage(messageSource, ErrorType.AUTHENTICATION_TOKEN_MISSING.getTitleMessageCode());
                 ResponseCookie tokenCookieClean = CookieUtils.buildCookieWith("", 0L);
                 HttpServletResponse httpServletResponse = (HttpServletResponse) response;
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                httpServletResponse.getWriter().write("Token expirada.");
+                httpServletResponse.getWriter().write(errorMessage);
                 httpServletResponse.setHeader(HttpHeaders.SET_COOKIE, tokenCookieClean.toString());
                 httpServletResponse.getWriter().flush();
             } catch (Exception ex) {
+                final String errorMessage = InternationalizationUtils.getMessage(messageSource, ErrorType.UNEXPECTED_INTERNAL_ERROR.getTitleMessageCode());
                 HttpServletResponse httpServletResponse = (HttpServletResponse) response;
                 httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                httpServletResponse.getWriter().write("Houve um erro inesperado, tente novamente mais tarde.");
+                httpServletResponse.getWriter().write(errorMessage);
                 httpServletResponse.getWriter().flush();
             }
 

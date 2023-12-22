@@ -1,6 +1,6 @@
 package br.com.financialtoolapi.application.domain.repositories;
 
-import br.com.financialtoolapi.application.domain.entities.security.UserCredentialDataEntity;
+import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

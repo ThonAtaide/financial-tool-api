@@ -1,6 +1,6 @@
 package br.com.financialtoolapi.application.adapters.in.security;
 
-import br.com.financialtoolapi.application.domain.entities.security.UserAccountEntity;
+import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
 import br.com.financialtoolapi.application.domain.usecases.security.FindUserAccountByEmailUseCase;
 import br.com.financialtoolapi.application.exceptions.ResourceNotFoundException;
 import br.com.financialtoolapi.application.ports.in.security.UserAccountPort;
@@ -23,7 +23,7 @@ public class UserAccountDataAdapter implements UserAccountPort {
                 .map(UserAccountEntity::getId)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
-                                "E-mail alterado e por isso é preciso logar novamente.", //TODO tratar pois não é legal usuário perder sessão por trocar email
+                                "E-mail alterado e por isso é preciso logar novamente.", //TODO Ocorrerá quando usuário alterar email. Tratar pois não é legal usuário perder sessão por trocar email
                                 String.format("Não foi possível encontrar uma conta vinculada ao email %s", email))
                 );
     }

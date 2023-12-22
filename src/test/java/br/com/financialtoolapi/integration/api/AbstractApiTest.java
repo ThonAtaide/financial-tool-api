@@ -2,7 +2,7 @@ package br.com.financialtoolapi.integration.api;
 
 import br.com.financialtoolapi.api.controller.v1.request.LoginRequestV1;
 import br.com.financialtoolapi.api.controller.v1.response.LoginResponseV1;
-import br.com.financialtoolapi.application.domain.entities.security.UserCredentialDataEntity;
+import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.application.domain.repositories.UserCredentialDataEntityRepository;
 import br.com.financialtoolapi.factory.user.UserFactory;
 import br.com.financialtoolapi.integration.AbstractIntegrationTest;

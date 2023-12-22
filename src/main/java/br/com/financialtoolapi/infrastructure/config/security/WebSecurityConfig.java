@@ -5,6 +5,7 @@ import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
 import br.com.financialtoolapi.infrastructure.config.security.filters.HeaderAppenderFilter;
 import br.com.financialtoolapi.infrastructure.config.security.resolvers.BearerTokenCookieResolver;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,6 +29,7 @@ public class WebSecurityConfig {
     private final UserAccountPort userAccountPort;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     private final JwtProperties jwtProperties;
+    private final MessageSource messageSource;
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity) throws Exception {
@@ -49,7 +51,7 @@ public class WebSecurityConfig {
                         oauth2Configurer.jwt(Customizer.withDefaults())
                                 .authenticationEntryPoint(authenticationEntryPoint)
                                 .bearerTokenResolver(bearerTokenCookieResolver)
-                ).addFilterAfter(new HeaderAppenderFilter(userAccountPort, jwtProperties), BearerTokenAuthenticationFilter.class);
+                ).addFilterAfter(new HeaderAppenderFilter(userAccountPort, messageSource), BearerTokenAuthenticationFilter.class);
 
         return httpSecurity.build();
     }

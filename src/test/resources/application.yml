@@ -15,7 +15,3 @@ spring:
 financial-tool:
   jwt-properties:
     token-duration-seconds: 2
-
-logging:
-  level:
-    root: debug

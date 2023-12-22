@@ -3,7 +3,7 @@ package br.com.financialtoolapi.integration.api.v1;
 import br.com.financialtoolapi.api.controller.v1.request.LoginRequestV1;
 import br.com.financialtoolapi.api.controller.v1.response.ErrorResponseV1;
 import br.com.financialtoolapi.api.controller.v1.response.LoginResponseV1;
-import br.com.financialtoolapi.application.domain.entities.security.UserCredentialDataEntity;
+import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.integration.api.AbstractApiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
             "And a token on cookie")
     void testSuccessfullySignInWhenUserHasAValidAndActiveAccount() {
         final UserCredentialDataEntity userCredentialData = createUserAccountOnDatabase();
-        final String nickname = userCredentialData.getUserAccount().getUserProfileData().getNickname();
+        final String nickname = userCredentialData.getUserAccount().getNickname();
         final LoginRequestV1 loginRequestV1 = new LoginRequestV1(
                 userCredentialData.getUsername(),
                 userCredentialData.getPassword()

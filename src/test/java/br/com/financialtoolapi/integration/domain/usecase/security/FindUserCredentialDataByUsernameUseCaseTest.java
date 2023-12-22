@@ -1,8 +1,7 @@
 package br.com.financialtoolapi.integration.domain.usecase.security;
 
-import br.com.financialtoolapi.application.domain.entities.business.UserProfileDataEntity;
-import br.com.financialtoolapi.application.domain.entities.security.UserAccountEntity;
-import br.com.financialtoolapi.application.domain.entities.security.UserCredentialDataEntity;
+import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
+import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.application.domain.repositories.UserCredentialDataEntityRepository;
 import br.com.financialtoolapi.application.domain.usecases.security.FindUserCredentialDataByUsernameUseCase;
 import br.com.financialtoolapi.integration.AbstractIntegrationTest;
@@ -56,12 +55,8 @@ public class FindUserCredentialDataByUsernameUseCaseTest extends AbstractIntegra
                         UserAccountEntity
                                 .builder()
                                 .email(UUID.randomUUID().toString())
-                                .userProfileData(
-                                        UserProfileDataEntity
-                                                .builder()
-                                                .nickname(UUID.randomUUID().toString())
-                                                .build()
-                                ).build()
+                                .nickname(UUID.randomUUID().toString())
+                                .build()
                 ).build();
         return userCredentialDataEntityRepository.save(userCredentialData);
     }

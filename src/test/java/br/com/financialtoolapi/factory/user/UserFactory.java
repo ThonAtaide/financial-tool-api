@@ -1,8 +1,7 @@
 package br.com.financialtoolapi.factory.user;
 
-import br.com.financialtoolapi.application.domain.entities.business.UserProfileDataEntity;
-import br.com.financialtoolapi.application.domain.entities.security.UserAccountEntity;
-import br.com.financialtoolapi.application.domain.entities.security.UserCredentialDataEntity;
+import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
+import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
 import lombok.experimental.UtilityClass;
 
@@ -33,12 +32,6 @@ public class UserFactory {
         return UserAccountEntity
                 .builder()
                 .email(UUID.randomUUID().toString())
-                .userProfileData(buildUserProfileData())
-                .build();
-    }
-    public UserProfileDataEntity buildUserProfileData() {
-        return UserProfileDataEntity
-                .builder()
                 .nickname(UUID.randomUUID().toString())
                 .build();
     }

@@ -1,6 +1,6 @@
 package br.com.financialtoolapi.application.mapper;
 
-import br.com.financialtoolapi.application.domain.entities.security.UserCredentialDataEntity;
+import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.application.dtos.out.UserAuthenticationOutputDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,6 +9,6 @@ import org.mapstruct.Mapping;
 public interface AuthenticationMapper {
 
     @Mapping(source = "userAccount.email", target = "email")
-    @Mapping(source = "userAccount.userProfileData.nickname", target = "nickname")
+    @Mapping(source = "userAccount.nickname", target = "nickname")
     UserAuthenticationOutputDto toUserLoginOutputDto(UserCredentialDataEntity userCredential);
 }

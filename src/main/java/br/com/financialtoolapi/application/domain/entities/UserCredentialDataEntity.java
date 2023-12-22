@@ -1,5 +1,6 @@
-package br.com.financialtoolapi.application.domain.entities.security;
+package br.com.financialtoolapi.application.domain.entities;
 
+import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

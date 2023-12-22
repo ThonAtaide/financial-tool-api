@@ -3,7 +3,7 @@ package br.com.financialtoolapi.integration.api.v1;
 import br.com.financialtoolapi.api.controller.v1.request.UserRegisterRequestV1;
 import br.com.financialtoolapi.api.controller.v1.response.ErrorResponseV1;
 import br.com.financialtoolapi.api.controller.v1.response.LoginResponseV1;
-import br.com.financialtoolapi.application.domain.entities.security.UserCredentialDataEntity;
+import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.integration.api.AbstractApiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

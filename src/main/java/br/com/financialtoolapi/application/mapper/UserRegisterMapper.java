@@ -1,8 +1,7 @@
 package br.com.financialtoolapi.application.mapper;
 
-import br.com.financialtoolapi.application.domain.entities.business.UserProfileDataEntity;
-import br.com.financialtoolapi.application.domain.entities.security.UserAccountEntity;
-import br.com.financialtoolapi.application.domain.entities.security.UserCredentialDataEntity;
+import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
+import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,15 +21,7 @@ public interface UserRegisterMapper {
         return UserAccountEntity
                 .builder()
                 .email(userRegisterInputDto.email())
-                .userProfileData(mapUserProfileData(userRegisterInputDto.nickname()))
+                .nickname(userRegisterInputDto.nickname())
                 .build();
-    }
-
-    default UserProfileDataEntity mapUserProfileData(final String nickname) {
-        return UserProfileDataEntity
-                .builder()
-                .nickname(nickname)
-                .build();
-
     }
 }

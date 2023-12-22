@@ -1,6 +1,6 @@
 package br.com.financialtoolapi.application.domain.usecases.security;
 
-import br.com.financialtoolapi.application.domain.entities.security.UserAccountEntity;
+import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
 import br.com.financialtoolapi.application.domain.repositories.UserAccountRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

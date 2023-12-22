@@ -1,8 +1,7 @@
 package br.com.financialtoolapi.integration.domain.usecase.security;
 
 
-import br.com.financialtoolapi.application.domain.entities.business.UserProfileDataEntity;
-import br.com.financialtoolapi.application.domain.entities.security.UserAccountEntity;
+import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
 import br.com.financialtoolapi.application.domain.repositories.UserAccountRepository;
 import br.com.financialtoolapi.application.domain.usecases.security.FindUserAccountByEmailUseCase;
 import br.com.financialtoolapi.integration.AbstractIntegrationTest;
@@ -51,12 +50,8 @@ public class FindUserAccountByEmailUseCaseTest extends AbstractIntegrationTest {
         final UserAccountEntity userAccountEntity = UserAccountEntity
                 .builder()
                 .email(UUID.randomUUID().toString())
-                .userProfileData(
-                        UserProfileDataEntity
-                                .builder()
-                                .nickname(UUID.randomUUID().toString())
-                                .build()
-                ).build();
+                .nickname(UUID.randomUUID().toString())
+               .build();
         return userAccountRepository.save(userAccountEntity);
     }
 

@@ -1,6 +1,6 @@
 package br.com.financialtoolapi.integration.domain.usecase.security;
 
-import br.com.financialtoolapi.application.domain.entities.security.UserCredentialDataEntity;
+import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.application.domain.repositories.UserCredentialDataEntityRepository;
 import br.com.financialtoolapi.application.domain.usecases.security.RegisterUserWithLocalCredentialsUseCase;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
@@ -38,7 +38,7 @@ public class RegisterUserWithLocalCredentialsUseCaseTest extends AbstractIntegra
         assertThat(createdUser.getUsername()).isEqualTo(userRegisterInput.username());
         assertThat(createdUser.getPassword()).isEqualTo(userRegisterInput.password());
         assertThat(createdUser.getUserAccount().getEmail()).isEqualTo(userRegisterInput.email());
-        assertThat(createdUser.getUserAccount().getUserProfileData().getNickname()).isEqualTo(userRegisterInput.nickname());
+        assertThat(createdUser.getUserAccount().getNickname()).isEqualTo(userRegisterInput.nickname());
 
     }
 }

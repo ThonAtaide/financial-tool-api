@@ -1,4 +1,4 @@
-package br.com.financialtoolapi.application.domain.entities.business;
+package br.com.financialtoolapi.application.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
