@@ -1,0 +1,27 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is submiting a new pull request for ${{ github.ref_name }} 🚀
+on:
+  pull_request:
+    types:
+      [opened, edited, reopened, synchronize]
+jobs:
+  Validate-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 Running automated tests  ${{ github.event_name }} event."
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Setup and execute Gradle 'test' task
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: test
+      - name: Setup and execute Gradle 'buid' task
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+      - run: echo "🍏 This job's status is ${{ job.status }}."
