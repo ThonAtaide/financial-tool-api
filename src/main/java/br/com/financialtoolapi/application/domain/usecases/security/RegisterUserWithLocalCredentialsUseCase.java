@@ -1,6 +1,6 @@
 package br.com.financialtoolapi.application.domain.usecases.security;
 
-import br.com.financialtoolapi.application.domain.exceptions.UserPersistenceException;
+import br.com.financialtoolapi.application.domain.exceptions.UserRegisterException;
 import br.com.financialtoolapi.application.domain.repositories.UserCredentialDataEntityRepository;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
 import br.com.financialtoolapi.application.dtos.out.LoggedUserDataDto;
@@ -29,7 +29,7 @@ public class RegisterUserWithLocalCredentialsUseCase {
                     .save(userCredentialDataEntity);
         } catch (Exception ex) {
             log.error(ex.getMessage());
-            throw new UserPersistenceException("Houve um erro durante a persistência e o usuário não pôde ser persistido.");
+            throw new UserRegisterException("Houve um erro durante a persistência e o usuário não pôde ser persistido.");
         }
 
         return new LoggedUserDataDto(userRegisterInputDto.nickname(), userRegisterInputDto.email());
