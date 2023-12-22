@@ -1,4 +1,4 @@
-package br.com.financialtoolapi.api.controller.v1.request;
+package br.com.financialtoolapi.controller.v1.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

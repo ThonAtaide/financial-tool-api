@@ -1,4 +1,4 @@
-package br.com.financialtoolapi.application.domain.usecases.security;
+package br.com.financialtoolapi.application.usecases.security;
 
 import br.com.financialtoolapi.application.domain.exceptions.UserRegisterException;
 import br.com.financialtoolapi.application.domain.repositories.UserCredentialDataEntityRepository;

@@ -1,8 +1,8 @@
 package br.com.financialtoolapi.integration.api.v1;
 
-import br.com.financialtoolapi.api.controller.v1.request.UserRegisterRequestV1;
-import br.com.financialtoolapi.api.controller.v1.response.ErrorResponseV1;
-import br.com.financialtoolapi.api.controller.v1.response.LoginResponseV1;
+import br.com.financialtoolapi.controller.v1.request.UserRegisterRequestV1;
+import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
+import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.integration.api.AbstractApiTest;
 import org.junit.jupiter.api.DisplayName;
@@ -14,9 +14,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.UUID;
 
-import static br.com.financialtoolapi.api.ErrorType.PAYLOAD_DATA_VALIDATION_FAIL;
-import static br.com.financialtoolapi.api.controller.v1.ExceptionHandlerV1.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
-import static br.com.financialtoolapi.api.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
+import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PAYLOAD_DATA_VALIDATION_FAIL;
+import static br.com.financialtoolapi.controller.errorhandler.CustomExceptionHandler.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
+import static br.com.financialtoolapi.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
 import static br.com.financialtoolapi.application.validations.userinfo.ValidateIfUsernameIsAvailable.DETAILED_ERROR_MESSAGE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -64,11 +64,11 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
         final UserRegisterRequestV1 userRegisterRequest =
                 new UserRegisterRequestV1(null, null, null, null);
 
-        ResponseEntity<ErrorResponseV1> response = restTemplate
+        ResponseEntity<ErrorResponse> response = restTemplate
                 .postForEntity(
                         concatServerUrlWithResourcePath(SIGN_UP_REQUEST_URL),
                         userRegisterRequest,
-                        ErrorResponseV1.class
+                        ErrorResponse.class
                 );
 
         assertThat(response.getBody()).isNotNull();
@@ -99,11 +99,11 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
                 UUID.randomUUID().toString().substring(0, 9)
         );
 
-        ResponseEntity<ErrorResponseV1> response = restTemplate
+        ResponseEntity<ErrorResponse> response = restTemplate
                 .postForEntity(
                         concatServerUrlWithResourcePath(SIGN_UP_REQUEST_URL),
                         userRegisterRequest,
-                        ErrorResponseV1.class
+                        ErrorResponse.class
                 );
 
         assertThat(response.getBody()).isNotNull();

@@ -1,7 +1,6 @@
-package br.com.financialtoolapi.api.controller.v1;
+package br.com.financialtoolapi.controller.errorhandler;
 
-import br.com.financialtoolapi.api.ErrorType;
-import br.com.financialtoolapi.api.controller.v1.response.ErrorResponseV1;
+import br.com.financialtoolapi.application.exceptions.ResourceNotFoundException;
 import br.com.financialtoolapi.application.exceptions.UnexpectedInternalErrorException;
 import br.com.financialtoolapi.application.exceptions.ValidationDataException;
 import br.com.financialtoolapi.application.utils.InternationalizationUtils;
@@ -21,22 +20,37 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static br.com.financialtoolapi.api.ErrorType.*;
+import static br.com.financialtoolapi.controller.errorhandler.ErrorType.*;
 
 @Slf4j
 @ControllerAdvice
 @RequiredArgsConstructor
-public class ExceptionHandlerV1 {
+public class CustomExceptionHandler {
 
     public static final String UNIDENTIFIED_ERROR_DEVELOPER_MESSAGE = "Unexpected error, contact administrator with correlation id %s";
     public static final String ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE = "Payload didn't attend the expectations and request couldn't be reached.";
     private final MessageSource messageSource;
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    protected ResponseEntity<Object> handleResourceNotFoundException(
+            final HttpServletRequest request, final ResourceNotFoundException ex
+    ) {
+        final ErrorResponse errorResponse = buildErrorResponse(
+                ErrorType.NOT_FOUND,
+                request,
+                List.of(ex.getUserFriendlyMessage()),
+                ex.getMessage()
+        );
+        return ResponseEntity
+                .status(ErrorType.NOT_FOUND.getHttpStatus())
+                .body(errorResponse);
+    }
+
     @ExceptionHandler(ValidationDataException.class)
     protected ResponseEntity<Object> handleValidationDataException(
             final HttpServletRequest request, final ValidationDataException ex
     ) {
-        final ErrorResponseV1 errorResponse = buildErrorResponse(
+        final ErrorResponse errorResponse = buildErrorResponse(
                 PAYLOAD_DATA_VALIDATION_FAIL,
                 request,
                 List.of(ex.getUserFriendlyMessage()),
@@ -51,7 +65,7 @@ public class ExceptionHandlerV1 {
     protected ResponseEntity<Object> handleBadCredentials(
             final HttpServletRequest request, final BadCredentialsException ex
     ) {
-        final ErrorResponseV1 errorResponse = buildErrorResponse(
+        final ErrorResponse errorResponse = buildErrorResponse(
                 AUTHENTICATION_FAIL_BAD_CREDENTIALS,
                 request,
                 List.of(),
@@ -72,7 +86,7 @@ public class ExceptionHandlerV1 {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
 
-        final ErrorResponseV1 errorResponse = buildErrorResponse(
+        final ErrorResponse errorResponse = buildErrorResponse(
                 PAYLOAD_DATA_VALIDATION_FAIL,
                 request,
                 errorMessages,
@@ -90,7 +104,7 @@ public class ExceptionHandlerV1 {
         final String errorIdentifier = UUID.randomUUID().toString();
         log.error(String.format("Unexpected error %s - ", errorIdentifier).concat(ex.getMessage()));
 
-        final ErrorResponseV1 errorResponse = buildErrorResponse(
+        final ErrorResponse errorResponse = buildErrorResponse(
                 UNEXPECTED_INTERNAL_ERROR,
                 request,
                 List.of(ex.getUserFriendlyMessage()),
@@ -108,7 +122,7 @@ public class ExceptionHandlerV1 {
         final String errorIdentifier = UUID.randomUUID().toString();
         log.error(String.format("Unexpected error %s - ", errorIdentifier).concat(ex.getMessage()));
 
-        final ErrorResponseV1 errorResponse = buildErrorResponse(
+        final ErrorResponse errorResponse = buildErrorResponse(
                 UNEXPECTED_INTERNAL_ERROR,
                 request,
                 List.of(),
@@ -119,14 +133,14 @@ public class ExceptionHandlerV1 {
                 .body(errorResponse);
     }
 
-    private ErrorResponseV1 buildErrorResponse(
+    private ErrorResponse buildErrorResponse(
             final ErrorType errorType,
             final HttpServletRequest request,
             final List<String> userFriendlyErrorMessages,
             final String developerMessage
     ) {
         final String title = getErrorMessage(errorType.getTitleMessageCode());
-        return new ErrorResponseV1(
+        return new ErrorResponse(
                 title,
                 userFriendlyErrorMessages,
                 errorType,

@@ -2,7 +2,7 @@ package br.com.financialtoolapi.integration.domain.usecase.security;
 
 import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.application.domain.repositories.UserCredentialDataEntityRepository;
-import br.com.financialtoolapi.application.domain.usecases.security.RegisterUserWithLocalCredentialsUseCase;
+import br.com.financialtoolapi.application.usecases.security.RegisterUserWithLocalCredentialsUseCase;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
 import br.com.financialtoolapi.factory.user.UserFactory;
 import br.com.financialtoolapi.integration.AbstractIntegrationTest;

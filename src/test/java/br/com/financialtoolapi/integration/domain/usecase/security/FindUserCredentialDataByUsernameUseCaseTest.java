@@ -3,7 +3,7 @@ package br.com.financialtoolapi.integration.domain.usecase.security;
 import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
 import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.application.domain.repositories.UserCredentialDataEntityRepository;
-import br.com.financialtoolapi.application.domain.usecases.security.FindUserCredentialDataByUsernameUseCase;
+import br.com.financialtoolapi.application.usecases.security.FindUserCredentialDataByUsernameUseCase;
 import br.com.financialtoolapi.integration.AbstractIntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

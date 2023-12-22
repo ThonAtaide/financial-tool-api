@@ -1,8 +1,8 @@
 package br.com.financialtoolapi.integration.api.v1;
 
-import br.com.financialtoolapi.api.controller.v1.request.LoginRequestV1;
-import br.com.financialtoolapi.api.controller.v1.response.ErrorResponseV1;
-import br.com.financialtoolapi.api.controller.v1.response.LoginResponseV1;
+import br.com.financialtoolapi.controller.v1.request.LoginRequestV1;
+import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
+import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.integration.api.AbstractApiTest;
 import org.junit.jupiter.api.DisplayName;
@@ -16,10 +16,10 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.UUID;
 
-import static br.com.financialtoolapi.api.ErrorType.AUTHENTICATION_FAIL_BAD_CREDENTIALS;
-import static br.com.financialtoolapi.api.ErrorType.PAYLOAD_DATA_VALIDATION_FAIL;
-import static br.com.financialtoolapi.api.controller.v1.ExceptionHandlerV1.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
-import static br.com.financialtoolapi.api.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
+import static br.com.financialtoolapi.controller.errorhandler.ErrorType.AUTHENTICATION_FAIL_BAD_CREDENTIALS;
+import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PAYLOAD_DATA_VALIDATION_FAIL;
+import static br.com.financialtoolapi.controller.errorhandler.CustomExceptionHandler.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
+import static br.com.financialtoolapi.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class AuthenticationControllerSignInTest extends AbstractApiTest {
@@ -71,11 +71,11 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
                 userCredentialData.getPassword()
         );
 
-        final ResponseEntity<ErrorResponseV1> response = restTemplate
+        final ResponseEntity<ErrorResponse> response = restTemplate
                 .postForEntity(
                         concatServerUrlWithResourcePath(SIGN_IN_REQUEST_URL),
                         loginRequestV1,
-                        ErrorResponseV1.class
+                        ErrorResponse.class
                 );
 
         assertThat(response.getBody()).isNotNull();
@@ -108,11 +108,11 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
                 null
         );
 
-        ResponseEntity<ErrorResponseV1> response = restTemplate
+        ResponseEntity<ErrorResponse> response = restTemplate
                 .postForEntity(
                         concatServerUrlWithResourcePath(SIGN_IN_REQUEST_URL),
                         loginRequestV1,
-                        ErrorResponseV1.class
+                        ErrorResponse.class
                 );
 
         assertThat(response.getBody()).isNotNull();

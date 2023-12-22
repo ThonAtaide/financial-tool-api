@@ -1,9 +1,8 @@
 package br.com.financialtoolapi.integration.api.v1;
 
-import br.com.financialtoolapi.api.ErrorType;
-import br.com.financialtoolapi.api.controller.v1.response.ErrorResponseV1;
+import br.com.financialtoolapi.controller.errorhandler.ErrorType;
+import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
 import br.com.financialtoolapi.integration.api.AbstractApiTest;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.*;
@@ -44,12 +43,12 @@ public class AuthenticationControllerSignOutTest extends AbstractApiTest {
         final String expectedTitle = "Sign in to access resource.";
         final String expectedDevInfoMessage = "Authentication failed due to missing or expired token.";
         final var expectedErrorList = List.of("Please sign in to access resource.");
-        final ResponseEntity<ErrorResponseV1> signOutResponse = restTemplate
+        final ResponseEntity<ErrorResponse> signOutResponse = restTemplate
                 .exchange(
                         concatServerUrlWithResourcePath(SIGN_OUT_REQUEST_URL),
                         HttpMethod.POST,
                         new HttpEntity<>(null),
-                        ErrorResponseV1.class
+                        ErrorResponse.class
                 );
 
         assertThat(signOutResponse.getBody()).isNotNull();

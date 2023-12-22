@@ -1,4 +1,4 @@
-package br.com.financialtoolapi.infrastructure.security.dto;
+package br.com.financialtoolapi.application.dtos.out;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,12 +1,10 @@
-package br.com.financialtoolapi.api.controller.v1.response;
-
-import br.com.financialtoolapi.api.ErrorType;
+package br.com.financialtoolapi.controller.errorhandler;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public record ErrorResponseV1(
+public record ErrorResponse(
         String title,
         List<String> errors,
         ErrorType errorType,
@@ -16,7 +14,7 @@ public record ErrorResponseV1(
         String developerInfo
         ) {
 
-        public ErrorResponseV1 {
+        public ErrorResponse {
                errors = new ArrayList<>(errors);
         }
 

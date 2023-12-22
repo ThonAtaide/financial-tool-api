@@ -1,4 +1,4 @@
-package br.com.financialtoolapi.api.utils;
+package br.com.financialtoolapi.utils;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.http.ResponseCookie;

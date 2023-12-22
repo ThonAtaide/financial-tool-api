@@ -1,10 +1,11 @@
-package br.com.financialtoolapi.api.controller.v1;
+package br.com.financialtoolapi.controller.v1;
 
-import br.com.financialtoolapi.api.controller.v1.mapper.UserDataMapper;
-import br.com.financialtoolapi.api.controller.v1.request.LoginRequestV1;
-import br.com.financialtoolapi.api.controller.v1.request.UserRegisterRequestV1;
-import br.com.financialtoolapi.api.controller.v1.response.LoginResponseV1;
-import br.com.financialtoolapi.api.utils.CookieUtils;
+import br.com.financialtoolapi.application.ports.in.business.UserAccountManagementPort;
+import br.com.financialtoolapi.controller.v1.mapper.UserDataMapper;
+import br.com.financialtoolapi.controller.v1.request.LoginRequestV1;
+import br.com.financialtoolapi.controller.v1.request.UserRegisterRequestV1;
+import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
+import br.com.financialtoolapi.utils.CookieUtils;
 import br.com.financialtoolapi.application.dtos.out.LoggedUserDataDto;
 import br.com.financialtoolapi.application.ports.in.security.LocalAuthenticationPort;
 import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
@@ -32,6 +33,7 @@ public class AuthenticationController {
     private final JwtService jwtService;
     private final JwtProperties jwtProperties;
     private final LocalAuthenticationPort localAuthenticationPort;
+    private final UserAccountManagementPort userAccountManagementPort;
     private final UserDataMapper userDataMapper = Mappers.getMapper(UserDataMapper.class);
 
     @PostMapping("sign-in")
@@ -53,8 +55,8 @@ public class AuthenticationController {
 
     @PostMapping("sign-up")
     public ResponseEntity<LoginResponseV1> registerNewUser(@Valid @RequestBody final UserRegisterRequestV1 userRegisterRequest) {
-        final var createdUserAuthenticated = localAuthenticationPort
-                .registerNewUser(this.userDataMapper.from(userRegisterRequest));
+        final var createdUserAuthenticated = userAccountManagementPort
+                .createUser(this.userDataMapper.from(userRegisterRequest));
         return this.generateJwtTokenAndResponseEntityWithCookie(createdUserAuthenticated, HttpStatus.CREATED);
     }
 
