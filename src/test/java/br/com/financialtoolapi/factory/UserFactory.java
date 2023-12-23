@@ -1,4 +1,4 @@
-package br.com.financialtoolapi.factory.user;
+package br.com.financialtoolapi.factory;
 
 import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
 import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;

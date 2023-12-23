@@ -44,7 +44,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/sign-in").permitAll()
                                 .requestMatchers("/sign-up").permitAll()
-//                                .requestMatchers(HttpMethod.GET, "/expenseCategories", "/expenseCategories/*").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/expenseCategories", "/expenseCategories/*").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/expenseCategories").denyAll()
                                 .requestMatchers(HttpMethod.PUT, "/expenseCategories/**").denyAll()
                                 .anyRequest().authenticated()

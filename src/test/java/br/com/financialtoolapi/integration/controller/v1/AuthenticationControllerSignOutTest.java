@@ -1,8 +1,8 @@
-package br.com.financialtoolapi.integration.api.v1;
+package br.com.financialtoolapi.integration.controller.v1;
 
 import br.com.financialtoolapi.controller.errorhandler.ErrorType;
 import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
-import br.com.financialtoolapi.integration.api.AbstractApiTest;
+import br.com.financialtoolapi.integration.controller.AbstractApiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.*;

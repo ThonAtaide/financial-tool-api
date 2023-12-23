@@ -1,10 +1,10 @@
-package br.com.financialtoolapi.integration.api;
+package br.com.financialtoolapi.integration.controller;
 
 import br.com.financialtoolapi.controller.v1.request.LoginRequestV1;
 import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.application.domain.repositories.UserCredentialDataEntityRepository;
-import br.com.financialtoolapi.factory.user.UserFactory;
+import br.com.financialtoolapi.factory.UserFactory;
 import br.com.financialtoolapi.integration.AbstractIntegrationTest;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;

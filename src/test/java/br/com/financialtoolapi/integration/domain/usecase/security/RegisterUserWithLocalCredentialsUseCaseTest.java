@@ -4,7 +4,7 @@ import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEnt
 import br.com.financialtoolapi.application.domain.repositories.UserCredentialDataEntityRepository;
 import br.com.financialtoolapi.application.usecases.security.RegisterUserWithLocalCredentialsUseCase;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
-import br.com.financialtoolapi.factory.user.UserFactory;
+import br.com.financialtoolapi.factory.UserFactory;
 import br.com.financialtoolapi.integration.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

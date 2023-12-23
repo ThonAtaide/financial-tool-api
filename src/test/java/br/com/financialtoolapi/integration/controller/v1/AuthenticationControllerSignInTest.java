@@ -1,10 +1,10 @@
-package br.com.financialtoolapi.integration.api.v1;
+package br.com.financialtoolapi.integration.controller.v1;
 
 import br.com.financialtoolapi.controller.v1.request.LoginRequestV1;
 import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
 import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
-import br.com.financialtoolapi.integration.api.AbstractApiTest;
+import br.com.financialtoolapi.integration.controller.AbstractApiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +25,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class AuthenticationControllerSignInTest extends AbstractApiTest {
 
     private static final String SIGN_IN_REQUEST_URL = "/sign-in";
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Test
     @DisplayName("Given that user has a valid an active account " +
