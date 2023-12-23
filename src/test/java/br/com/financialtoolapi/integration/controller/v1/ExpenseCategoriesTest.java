@@ -44,7 +44,7 @@ public class ExpenseCategoriesTest extends AbstractApiTest {
             "Then api should return status code OK with paginated expense categories.")
     void testGetRequestIntoAllExpenseCategoriesWhenUserHasSignIn() {
         populateExpenseCategoriesTable();
-
+        final int totalExpenseCategories = expenseCategoryRepository.findAll().size();
         final HttpHeaders headers = signInRandomUserAndExtractAccessTokenHeaders();
         final ResponseEntity<LinkedHashMap> response = restTemplate
                 .exchange(
@@ -59,7 +59,7 @@ public class ExpenseCategoriesTest extends AbstractApiTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         final LinkedHashMap page = (LinkedHashMap) response.getBody().get("page");
-        assertThat(page.get("totalElements")).isEqualTo(4);
+        assertThat(page.get("totalElements")).isEqualTo(totalExpenseCategories);
     }
 
     @Test

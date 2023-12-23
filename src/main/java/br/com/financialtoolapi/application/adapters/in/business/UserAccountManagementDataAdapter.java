@@ -1,7 +1,7 @@
 package br.com.financialtoolapi.application.adapters.in.business;
 
 import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
-import br.com.financialtoolapi.application.domain.exceptions.UserRegisterException;
+import br.com.financialtoolapi.application.exceptions.EntityCreationException;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
 import br.com.financialtoolapi.application.dtos.out.LoggedUserDataDto;
 import br.com.financialtoolapi.application.exceptions.UnexpectedInternalErrorException;
@@ -38,24 +38,18 @@ public class UserAccountManagementDataAdapter implements UserAccountManagementPo
     public LoggedUserDataDto createUser(final UserRegisterInputDto userRegister) {
         userInfoValidationList
                 .forEach(it -> it.validate(userRegister));
-        try {
-            final String encodedPassword = authenticationWrapper.encodePassword(userRegister.password());
-            return registerUserWithLocalCredentialsUseCase
-                    .registerNewUserWithLocalCredentials(
-                            new UserRegisterInputDto(
-                                    userRegister.username(),
-                                    encodedPassword,
-                                    userRegister.nickname(),
-                                    userRegister.email()
-                            )
-                    );
-        } catch (UserRegisterException ex) {
-            log.error(String.valueOf(ex));
-            throw new UnexpectedInternalErrorException(
-                    InternationalizationUtils.getMessage(messageSource, UNEXPECTED_ERROR_MESSAGE),
-                    "An unexpected error occurred during new user persistence."
-            );
-        }
+        final String encodedPassword = authenticationWrapper.encodePassword(userRegister.password());
+
+        return registerUserWithLocalCredentialsUseCase
+                .registerNewUserWithLocalCredentials(
+                        new UserRegisterInputDto(
+                                userRegister.username(),
+                                encodedPassword,
+                                userRegister.nickname(),
+                                userRegister.email()
+                        )
+                );
+
     }
 
     @Override

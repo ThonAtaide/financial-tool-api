@@ -5,9 +5,10 @@ import br.com.financialtoolapi.application.dtos.out.UserAuthenticationOutputDto;
 import br.com.financialtoolapi.application.dtos.out.UserDetailsImpl;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AuthenticationMapper {
 
     @Mapping(source = "userAccount.email", target = "email")
