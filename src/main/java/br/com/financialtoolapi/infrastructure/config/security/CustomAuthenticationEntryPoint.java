@@ -1,6 +1,6 @@
 package br.com.financialtoolapi.infrastructure.config.security;
 
-import br.com.financialtoolapi.api.controller.v1.response.ErrorResponseV1;
+import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
 import br.com.financialtoolapi.application.utils.InternationalizationUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 
-import static br.com.financialtoolapi.api.ErrorType.AUTHENTICATION_TOKEN_MISSING;
+import static br.com.financialtoolapi.controller.errorhandler.ErrorType.AUTHENTICATION_TOKEN_MISSING;
 
 @Component
 @RequiredArgsConstructor
@@ -38,7 +38,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         final String instance = request.getServletPath();
         final String messageTitle = InternationalizationUtils
                 .getMessage(messageSource, AUTHENTICATION_TOKEN_MISSING.getTitleMessageCode());
-        final ErrorResponseV1 errorResponse = new ErrorResponseV1(
+        final ErrorResponse errorResponse = new ErrorResponse(
                 messageTitle,
                 List.of(InternationalizationUtils.getMessage(messageSource, MISSING_ACCESS_TOKEN_MESSAGE_CODE)),
                 AUTHENTICATION_TOKEN_MISSING,

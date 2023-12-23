@@ -1,6 +1,6 @@
 package br.com.financialtoolapi.application.validations.userinfo;
 
-import br.com.financialtoolapi.application.domain.usecases.security.FindUserCredentialDataByUsernameUseCase;
+import br.com.financialtoolapi.application.usecases.security.FindUserCredentialDataByUsernameUseCase;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
 import br.com.financialtoolapi.application.exceptions.ValidationDataException;
 import lombok.NonNull;

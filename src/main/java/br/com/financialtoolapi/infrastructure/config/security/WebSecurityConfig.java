@@ -1,9 +1,10 @@
 package br.com.financialtoolapi.infrastructure.config.security;
 
-import br.com.financialtoolapi.application.ports.in.security.UserAccountPort;
-import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
+import br.com.financialtoolapi.application.ports.in.business.UserAccountManagementPort;
+import br.com.financialtoolapi.application.ports.out.security.AuthenticationFrameworkWrapper;
 import br.com.financialtoolapi.infrastructure.config.security.filters.HeaderAppenderFilter;
 import br.com.financialtoolapi.infrastructure.config.security.resolvers.BearerTokenCookieResolver;
+import br.com.financialtoolapi.infrastructure.security.services.LocalAuthenticationServiceFramework;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -25,14 +26,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final BearerTokenCookieResolver bearerTokenCookieResolver;
-    private final UserAccountPort userAccountPort;
-    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
-    private final JwtProperties jwtProperties;
-    private final MessageSource messageSource;
-
     @Bean
-    public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            final HttpSecurity httpSecurity,
+            final UserAccountManagementPort userAccountPort,
+            final CustomAuthenticationEntryPoint authenticationEntryPoint,
+            final BearerTokenCookieResolver bearerTokenCookieResolver,
+            final MessageSource messageSource
+    ) throws Exception {
 
         httpSecurity
                 .cors(Customizer.withDefaults())
@@ -43,7 +44,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/sign-in").permitAll()
                                 .requestMatchers("/sign-up").permitAll()
-//                                .requestMatchers(HttpMethod.GET, "/expenseCategories", "/expenseCategories/*").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/expenseCategories", "/expenseCategories/*").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/expenseCategories").denyAll()
                                 .requestMatchers(HttpMethod.PUT, "/expenseCategories/**").denyAll()
                                 .anyRequest().authenticated()

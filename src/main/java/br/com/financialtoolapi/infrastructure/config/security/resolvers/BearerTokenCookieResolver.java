@@ -1,6 +1,6 @@
 package br.com.financialtoolapi.infrastructure.config.security.resolvers;
 
-import br.com.financialtoolapi.api.utils.CookieUtils;
+import br.com.financialtoolapi.utils.CookieUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;

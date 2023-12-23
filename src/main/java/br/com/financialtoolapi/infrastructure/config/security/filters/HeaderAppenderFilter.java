@@ -1,11 +1,10 @@
 package br.com.financialtoolapi.infrastructure.config.security.filters;
 
-import br.com.financialtoolapi.api.ErrorType;
-import br.com.financialtoolapi.api.utils.CookieUtils;
+import br.com.financialtoolapi.controller.errorhandler.ErrorType;
+import br.com.financialtoolapi.utils.CookieUtils;
 import br.com.financialtoolapi.application.exceptions.ResourceNotFoundException;
-import br.com.financialtoolapi.application.ports.in.security.UserAccountPort;
+import br.com.financialtoolapi.application.ports.in.business.UserAccountManagementPort;
 import br.com.financialtoolapi.application.utils.InternationalizationUtils;
-import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,7 +25,7 @@ public class HeaderAppenderFilter implements Filter {
 
     public static final String JWT_SUBJECT = "sub";
     public static final String X_USER_IDENTIFIER_HEADER = "x_user_identifier_header";
-    private final UserAccountPort userAccountPort;
+    private final UserAccountManagementPort userAccountPort;
     private final MessageSource messageSource;
 
     @Override
