@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user_credentials_data")
+@Table(name = "USER_CREDENTIALS_DATA")
 public class UserCredentialDataEntity {
 
     @Id
@@ -23,14 +23,14 @@ public class UserCredentialDataEntity {
     private UUID id;
 
     @ToString.Include
-    @Column(unique = true, nullable = false)
+    @Column(name = "USER_USERNAME", unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "USER_PASSWORD", nullable = false)
     private String password;
 
     @ToString.Include
     @OneToOne(cascade = { CascadeType.ALL })
-    @JoinColumn(name = "user_account_id", nullable = false)
+    @JoinColumn(name = "USER_ACCOUNT_ID", nullable = false)
     private UserAccountEntity userAccount;
 }
