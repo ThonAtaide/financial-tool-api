@@ -4,8 +4,8 @@ import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
 import br.com.financialtoolapi.application.validations.ValidationRule;
 import org.springframework.context.MessageSource;
 
-public abstract class UserInfoValidation extends ValidationRule<UserRegisterInputDto> {
-    public UserInfoValidation(
+public abstract class AbstractUserInfoValidation extends ValidationRule<UserRegisterInputDto> {
+    public AbstractUserInfoValidation(
             final String USER_FRIENDLY_MESSAGE_CODE,
             final MessageSource messageSource
     ) {

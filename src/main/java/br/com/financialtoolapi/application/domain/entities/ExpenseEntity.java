@@ -11,9 +11,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "EXPENSE")
-@ToString
-@Getter
-@Setter
+@Data
+@Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,7 +31,7 @@ public class ExpenseEntity {
     private BigDecimal amount;
 
     @Column(name = "IS_FIXED_EXPENSE", nullable = false)
-    private boolean IsFixedExpense = false;
+    private boolean isFixedExpense;
 
     @Column(name = "DAT_PURCHASE", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -46,14 +45,11 @@ public class ExpenseEntity {
     @JoinColumn(name = "EXPENSE_OWNER", nullable = false)
     private UserAccountEntity owner;
 
-    @Column(name = "DAT_CREATION")
+    @Column(name = "DAT_CREATION", updatable = false)
     @CreatedDate
     private Instant datCreation;
 
-    @Column(name = "DAT_UPDATE")
+    @Column(name = "DAT_UPDATE", updatable = false)
     @LastModifiedDate
     private Instant datUpdate;
-
-
-
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class ValidateIfEmailIsAvailable extends UserInfoValidation {
+public class ValidateIfEmailIsAvailable extends AbstractUserInfoValidation {
 
     public static final String DETAILED_ERROR_MESSAGE = "The email %s has already be taken.";
     private final FindUserAccountByEmailUseCase findUserAccountByEmailUseCase;
