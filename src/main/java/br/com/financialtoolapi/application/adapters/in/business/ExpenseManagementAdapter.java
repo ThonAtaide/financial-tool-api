@@ -8,6 +8,7 @@ import br.com.financialtoolapi.application.mapper.ExpenseMapper;
 import br.com.financialtoolapi.application.ports.in.business.ExpenseManagementPort;
 import br.com.financialtoolapi.application.usecases.business.expense.CreateOrUpdateExpenseUseCase;
 import br.com.financialtoolapi.application.usecases.business.expense.DeleteExpenseByIdUseCase;
+import br.com.financialtoolapi.application.usecases.business.expense.FindAllExpensesUseCase;
 import br.com.financialtoolapi.application.usecases.business.expense.FindExpenseByIdUseCase;
 import br.com.financialtoolapi.application.utils.InternationalizationUtils;
 import io.vavr.control.Option;
@@ -16,10 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.context.MessageSource;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -33,6 +33,7 @@ public class ExpenseManagementAdapter implements ExpenseManagementPort {
     private final CreateOrUpdateExpenseUseCase createOrUpdateExpenseUseCase;
     private final FindExpenseByIdUseCase findExpenseByIdUseCase;
     private final DeleteExpenseByIdUseCase deleteExpenseByIdUseCase;
+    private final FindAllExpensesUseCase findAllExpensesUseCase;
     private final MessageSource messageSource;
 
     @Override
@@ -58,8 +59,15 @@ public class ExpenseManagementAdapter implements ExpenseManagementPort {
     }
 
     @Override
-    public Collection<ExpenseOutputDto> findAllExpenses(Pageable pageable, Map<String, String> queryParams, UUID userAccountIdentifier) {
-        return null;
+    public Page<ExpenseOutputDto> findAllExpenses(
+            final int page,
+            final int pageSize,
+            final Map<String, String> queryParams,
+            final UUID userAccountIdentifier
+    ) {
+        return findAllExpensesUseCase
+                .findAllExpensesBy(page, pageSize, queryParams, userAccountIdentifier)
+                .map(expenseMapper::from);
     }
 
     @Override

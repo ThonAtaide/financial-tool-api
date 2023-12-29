@@ -9,12 +9,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -75,18 +74,16 @@ public class ExpenseController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public Collection<ExpenseResponseV1> findAllExpenses(
+    public Page<ExpenseResponseV1> findAllExpenses(
             @RequestHeader(name = X_USER_IDENTIFIER_HEADER, required = false) final UUID userAccountIdentifier,
-            @Valid @RequestBody(required = false) final Pageable pageable,
+            @RequestHeader(required = false, defaultValue = "0") int page,
+            @RequestHeader(required = false, defaultValue = "20") int pageSize,
             @RequestParam Map<String, String> queryParams
     ) {
-        return Option.of(pageable)
-                .orElse(Option.of(PageRequest.of(0, 20)))
-                .map(page -> expenseService.findAllExpenses(pageable, queryParams, userAccountIdentifier))
-                .map(expenses -> expenses
-                        .stream()
+        return Option.of(PageRequest.of(page, pageSize))
+                .map(pageable -> expenseService
+                        .findAllExpenses(page, pageSize, queryParams, userAccountIdentifier)
                         .map(expenseMapper::from)
-                        .toList()
                 ).get();
     }
 
