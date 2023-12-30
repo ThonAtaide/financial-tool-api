@@ -3,6 +3,7 @@ package br.com.financialtoolapi.controller.v1;
 import br.com.financialtoolapi.application.ports.in.business.ExpenseManagementPort;
 import br.com.financialtoolapi.controller.v1.mapper.ExpenseMapper;
 import br.com.financialtoolapi.controller.v1.request.ExpenseRequestV1;
+import br.com.financialtoolapi.controller.v1.response.ExpenseGroupResponseV1;
 import br.com.financialtoolapi.controller.v1.response.ExpenseResponseV1;
 import io.vavr.control.Option;
 import jakarta.validation.Valid;
@@ -11,9 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
@@ -95,6 +99,21 @@ public class ExpenseController {
     ) {
         log.debug("User: {} is deleting expense from id {}", userAccountIdentifier, expenseId);
         expenseService.deleteExpenseById(expenseId, userAccountIdentifier);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/grouped-by-categories")
+    public Collection<ExpenseGroupResponseV1> findAllExpenses(
+            @RequestHeader(name = X_USER_IDENTIFIER_HEADER, required = false) final UUID userAccountIdentifier,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM") Date monthRange
+    ) {
+        return Option.of(monthRange)
+                .map(date -> expenseService
+                        .expensesGroupedByCategories(date, userAccountIdentifier)
+                        .stream()
+                        .map(expenseMapper::from)
+                        .toList()
+                ).get();
     }
 
 }

@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Slf4j
 @Service
@@ -44,7 +44,7 @@ public class FindAllExpensesUseCase {
         return expenseRepository.findAll(
                 ExpenseRepository.buildPurchaseDateSpecification(from, until)
                         .and(ExpenseRepository.buildOwnerAccountSpecification(userAccountIdentifier)),
-                PageRequest.of(page, pageSize, ASC, EXPENSE_FIELD_DAT_PURCHASE)
+                PageRequest.of(page, pageSize, DESC, EXPENSE_FIELD_DAT_PURCHASE)
         );
     }
 
@@ -67,7 +67,7 @@ public class FindAllExpensesUseCase {
 
     private Date getUntilDateOrDefaultValue(final Map<String, String> queryParams) {
         final String stringDate = queryParams.get(QUERY_PARAM_PURCHASE_DATE_UNTIL);
-        return convertStringParamToDate(stringDate, QUERY_PARAM_PURCHASE_DATE_UNTIL, DateUtils.getFirstDayOfMonthDate());
+        return convertStringParamToDate(stringDate, QUERY_PARAM_PURCHASE_DATE_UNTIL, DateUtils.getFirstDayOfMonthDate(getFromDateOrDefaultValue(queryParams)));
     }
 
     private Date getFromDateOrDefaultValue(final Map<String, String> queryParams) {

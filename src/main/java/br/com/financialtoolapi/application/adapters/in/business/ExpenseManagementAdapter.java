@@ -2,14 +2,12 @@ package br.com.financialtoolapi.application.adapters.in.business;
 
 import br.com.financialtoolapi.application.domain.entities.ExpenseEntity;
 import br.com.financialtoolapi.application.dtos.in.ExpenseInputDto;
+import br.com.financialtoolapi.application.dtos.out.ExpenseGroupOutputDto;
 import br.com.financialtoolapi.application.dtos.out.ExpenseOutputDto;
 import br.com.financialtoolapi.application.exceptions.ForbiddenAccessException;
 import br.com.financialtoolapi.application.mapper.ExpenseMapper;
 import br.com.financialtoolapi.application.ports.in.business.ExpenseManagementPort;
-import br.com.financialtoolapi.application.usecases.business.expense.CreateOrUpdateExpenseUseCase;
-import br.com.financialtoolapi.application.usecases.business.expense.DeleteExpenseByIdUseCase;
-import br.com.financialtoolapi.application.usecases.business.expense.FindAllExpensesUseCase;
-import br.com.financialtoolapi.application.usecases.business.expense.FindExpenseByIdUseCase;
+import br.com.financialtoolapi.application.usecases.business.expense.*;
 import br.com.financialtoolapi.application.utils.InternationalizationUtils;
 import io.vavr.control.Option;
 import lombok.NonNull;
@@ -20,7 +18,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -34,6 +34,7 @@ public class ExpenseManagementAdapter implements ExpenseManagementPort {
     private final FindExpenseByIdUseCase findExpenseByIdUseCase;
     private final DeleteExpenseByIdUseCase deleteExpenseByIdUseCase;
     private final FindAllExpensesUseCase findAllExpensesUseCase;
+    private final GroupExpenseByCategoriesUseCase groupExpenseByCategoriesUseCase;
     private final MessageSource messageSource;
 
     @Override
@@ -89,6 +90,14 @@ public class ExpenseManagementAdapter implements ExpenseManagementPort {
                 .map(findExpenseByIdUseCase::findById)
                 .peek(expense -> validateIfUserHasAuthorization(userAccountIdentifier, expense))
                 .peek(it -> deleteExpenseByIdUseCase.deleteExpenseById(expenseId));
+    }
+
+    @Override
+    public Set<ExpenseGroupOutputDto> expensesGroupedByCategories(
+            @NonNull final Date monthRange,
+            @NonNull final UUID userAccountIdentifier
+    ) {
+        return groupExpenseByCategoriesUseCase.groupExpenseByCategories(monthRange, userAccountIdentifier);
     }
 
     private void validateIfUserHasAuthorization(

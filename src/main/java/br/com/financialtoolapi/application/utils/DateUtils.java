@@ -6,8 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.*;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.Locale;
 
@@ -22,14 +23,21 @@ public class DateUtils {
         return simpleDateFormat.parse(stringDate);
     }
 
-    public Date getFirstDayOfMonthDate() {
-        final var localDateNow = LocalDate.now();
-        return Date.from(
-                LocalDate
-                        .of(localDateNow.getYear(), localDateNow.getMonth(), 1)
-                        .atStartOfDay(ZoneId.systemDefault())
-                        .toInstant()
-        );
+    public Date getFirstDayOfMonthDate(final Date date) {
+        final LocalDate localDate = LocalDate
+                .ofInstant(date.toInstant(), ZoneId.systemDefault())
+                .withDayOfMonth(1)
+                .atStartOfDay()
+                .toLocalDate();
+
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
+    public Date getLastDayOfMonthDate(final Date date) {
+        final LocalDate localDate = LocalDate
+                .ofInstant(date.toInstant(), ZoneId.systemDefault())
+                .with(TemporalAdjusters.lastDayOfMonth());
+
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
 }

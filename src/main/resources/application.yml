@@ -20,6 +20,9 @@ spring:
     postgressql:
       transactional-lock: false
 
+logging:
+  level:
+    org.hibernate: TRACE
 
 
 financial-tool:
