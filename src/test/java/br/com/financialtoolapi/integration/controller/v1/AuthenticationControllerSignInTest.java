@@ -7,8 +7,6 @@ import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEnt
 import br.com.financialtoolapi.integration.controller.AbstractApiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static br.com.financialtoolapi.controller.errorhandler.ErrorType.AUTHENTICATION_FAIL_BAD_CREDENTIALS;
-import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PAYLOAD_DATA_VALIDATION_FAIL;
+import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PROVIDED_DATA_VALIDATION_FAIL;
 import static br.com.financialtoolapi.controller.errorhandler.CustomExceptionHandler.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
 import static br.com.financialtoolapi.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -113,10 +111,10 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
                 );
 
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus());
+        assertThat(response.getStatusCode()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL.getHttpStatus());
         assertThat(response.getBody().title()).isEqualTo(expectedErrorTitle);
-        assertThat(response.getBody().errorType()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL);
-        assertThat(response.getBody().statusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus().value());
+        assertThat(response.getBody().errorType()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL);
+        assertThat(response.getBody().statusCode()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL.getHttpStatus().value());
         assertThat(response.getBody().timestamp()).isNotNull();
         assertThat(response.getBody().instance()).isEqualTo(SIGN_IN_REQUEST_URL);
         assertThat(response.getBody().errors().containsAll(expectedMessages)).isTrue();

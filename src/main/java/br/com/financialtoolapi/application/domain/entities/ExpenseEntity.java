@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -16,6 +17,7 @@ import java.util.Date;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class ExpenseEntity {
 
     @Id
@@ -45,11 +47,11 @@ public class ExpenseEntity {
     @JoinColumn(name = "EXPENSE_OWNER", nullable = false)
     private UserAccountEntity owner;
 
-    @Column(name = "DAT_CREATION", updatable = false)
+    @Column(name = "DAT_CREATION", updatable = false, nullable = false)
     @CreatedDate
     private Instant datCreation;
 
-    @Column(name = "DAT_UPDATE", updatable = false)
+    @Column(name = "DAT_UPDATE", updatable = false, nullable = false)
     @LastModifiedDate
     private Instant datUpdate;
 }

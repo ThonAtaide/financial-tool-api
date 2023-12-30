@@ -37,7 +37,10 @@ public class ExpenseManagementAdapter implements ExpenseManagementPort {
     private final MessageSource messageSource;
 
     @Override
-    public ExpenseOutputDto createExpense(final ExpenseInputDto expense, final UUID userAccountIdentifier) {
+    public ExpenseOutputDto createExpense(
+            @NonNull final ExpenseInputDto expense,
+            @NonNull final UUID userAccountIdentifier
+    ) {
         return Option
                 .of(createOrUpdateExpenseUseCase.create(expense, userAccountIdentifier))
                 .map(expenseMapper::from)
@@ -45,8 +48,18 @@ public class ExpenseManagementAdapter implements ExpenseManagementPort {
     }
 
     @Override
-    public ExpenseOutputDto updateExpense(ExpenseInputDto expense, Long expenseId, UUID userAccountIdentifier) {
-        return null;
+    public ExpenseOutputDto updateExpense(
+            @NonNull final ExpenseInputDto expense,
+            @NonNull final Long expenseId,
+            @NonNull final UUID userAccountIdentifier
+    ) {
+        return Option
+                .of(expenseId)
+                .map(findExpenseByIdUseCase::findById)
+                .peek(existedExpense -> validateIfUserHasAuthorization(userAccountIdentifier, existedExpense))
+                .map(existedExpense -> createOrUpdateExpenseUseCase.update(expense, existedExpense))
+                .map(expenseMapper::from)
+                .get();
     }
 
     @Override

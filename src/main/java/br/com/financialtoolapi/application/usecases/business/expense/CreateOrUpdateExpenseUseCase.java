@@ -28,13 +28,25 @@ public class CreateOrUpdateExpenseUseCase {
     private final FindUserByAccountIdUseCase findUserByAccountIdUseCase;
     private final ExpenseRepository expenseRepository;
 
-    public ExpenseEntity create(ExpenseInputDto expense, UUID userAccountIdentifier) {
+    public ExpenseEntity create(@NonNull final ExpenseInputDto expense, @NonNull final UUID userAccountIdentifier) {
         final UserAccountEntity createdBy = findUserByAccountIdUseCase
                 .findUserAccountById(userAccountIdentifier);
         final ExpenseCategoryEntity expenseCategory = getExpenseCategory(expense.getExpenseCategory());
         final ExpenseEntity expenseEntity = expenseMapper.from(expense, expenseCategory, createdBy);
 
         return expenseRepository.save(expenseEntity);
+    }
+
+    public ExpenseEntity update(
+            @NonNull final ExpenseInputDto expense,
+            @NonNull final ExpenseEntity existedExpense
+    ) {
+        existedExpense.setAmount(expense.getAmount());
+        existedExpense.setFixedExpense(expense.isFixedExpense());
+        existedExpense.setDescription(expense.getDescription());
+        existedExpense.setDatPurchase(expense.getDatPurchase());
+        existedExpense.setExpenseCategory(getExpenseCategory(expense.getExpenseCategory()));
+        return expenseRepository.save(existedExpense);
     }
 
     private ExpenseCategoryEntity getExpenseCategory(@NonNull final Long expenseCategoryId) {
