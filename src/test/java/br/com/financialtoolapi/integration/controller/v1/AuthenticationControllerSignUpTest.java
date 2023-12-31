@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.UUID;
 
-import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PAYLOAD_DATA_VALIDATION_FAIL;
+import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PROVIDED_DATA_VALIDATION_FAIL;
 import static br.com.financialtoolapi.controller.errorhandler.CustomExceptionHandler.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
 import static br.com.financialtoolapi.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
 import static br.com.financialtoolapi.application.validations.userinfo.ValidateIfUsernameIsAvailable.DETAILED_ERROR_MESSAGE;
@@ -72,12 +72,12 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
                 );
 
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus());
+        assertThat(response.getStatusCode()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL.getHttpStatus());
         assertThat(response.getBody().title()).isEqualTo(expectedErrorTitle);
         assertThat(response.getBody().developerInfo()).isEqualTo(ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE);
         assertThat(response.getBody().errors().size()).isEqualTo(4);
-        assertThat(response.getBody().errorType()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL);
-        assertThat(response.getBody().statusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus().value());
+        assertThat(response.getBody().errorType()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL);
+        assertThat(response.getBody().statusCode()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL.getHttpStatus().value());
         assertThat(response.getBody().timestamp()).isNotNull();
         assertThat(response.getBody().instance()).isEqualTo(SIGN_UP_REQUEST_URL);
     }
@@ -107,10 +107,10 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
                 );
 
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus());
+        assertThat(response.getStatusCode()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL.getHttpStatus());
         assertThat(response.getBody().title()).isEqualTo(expectedErrorTitle);
-        assertThat(response.getBody().errorType()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL);
-        assertThat(response.getBody().statusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus().value());
+        assertThat(response.getBody().errorType()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL);
+        assertThat(response.getBody().statusCode()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL.getHttpStatus().value());
         assertThat(response.getBody().timestamp()).isNotNull();
         assertThat(response.getBody().instance()).isEqualTo(SIGN_UP_REQUEST_URL);
         assertThat(response.getBody().errors().containsAll(expectedErrorMessages)).isTrue();

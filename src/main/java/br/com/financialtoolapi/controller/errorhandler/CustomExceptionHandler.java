@@ -1,5 +1,6 @@
 package br.com.financialtoolapi.controller.errorhandler;
 
+import br.com.financialtoolapi.application.exceptions.InvalidQueryParamFormatException;
 import br.com.financialtoolapi.application.exceptions.ResourceNotFoundException;
 import br.com.financialtoolapi.application.exceptions.UnexpectedInternalErrorException;
 import br.com.financialtoolapi.application.exceptions.ValidationDataException;
@@ -51,13 +52,13 @@ public class CustomExceptionHandler {
             final HttpServletRequest request, final ValidationDataException ex
     ) {
         final ErrorResponse errorResponse = buildErrorResponse(
-                PAYLOAD_DATA_VALIDATION_FAIL,
+                PROVIDED_DATA_VALIDATION_FAIL,
                 request,
                 List.of(ex.getUserFriendlyMessage()),
                 ex.getMessage()
         );
         return ResponseEntity
-                .status(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus())
+                .status(PROVIDED_DATA_VALIDATION_FAIL.getHttpStatus())
                 .body(errorResponse);
     }
 
@@ -87,13 +88,13 @@ public class CustomExceptionHandler {
                 .toList();
 
         final ErrorResponse errorResponse = buildErrorResponse(
-                PAYLOAD_DATA_VALIDATION_FAIL,
+                PROVIDED_DATA_VALIDATION_FAIL,
                 request,
                 errorMessages,
                 ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE
         );
         return ResponseEntity
-                .status(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus())
+                .status(PROVIDED_DATA_VALIDATION_FAIL.getHttpStatus())
                 .body(errorResponse);
     }
 

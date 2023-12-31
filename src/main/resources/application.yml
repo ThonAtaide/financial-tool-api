@@ -11,6 +11,8 @@ spring:
     properties:
       hibernate:
         dialect: 'org.hibernate.dialect.PostgreSQLDialect'
+        jdbc:
+          time_zone: UTC
   flyway:
     url: 'jdbc:postgresql://localhost:5432/postgres'
     username: 'postgres'
@@ -18,9 +20,12 @@ spring:
     postgressql:
       transactional-lock: false
 
+logging:
+  level:
+    org.hibernate: TRACE
 
 
 financial-tool:
   jwt-properties:
-    token-duration-seconds: 60
+    token-duration-seconds: 600
 
