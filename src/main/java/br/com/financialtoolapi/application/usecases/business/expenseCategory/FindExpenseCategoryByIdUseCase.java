@@ -1,4 +1,4 @@
-package br.com.financialtoolapi.application.usecases.business;
+package br.com.financialtoolapi.application.usecases.business.expenseCategory;
 
 import br.com.financialtoolapi.application.domain.entities.ExpenseCategoryEntity;
 import br.com.financialtoolapi.application.domain.repositories.ExpenseCategoryRepository;

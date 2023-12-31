@@ -1,4 +1,4 @@
-package br.com.financialtoolapi.application.usecases.business;
+package br.com.financialtoolapi.application.usecases.business.userAccount;
 
 import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
 import br.com.financialtoolapi.application.domain.repositories.UserAccountRepository;
