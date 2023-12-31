@@ -103,13 +103,28 @@ public class ExpenseController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/grouped-by-categories")
-    public Collection<ExpenseGroupResponseV1> findAllExpenses(
+    public Collection<ExpenseGroupResponseV1> groupExpensesByExpenseCategory(
             @RequestHeader(name = X_USER_IDENTIFIER_HEADER, required = false) final UUID userAccountIdentifier,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM") Date monthRange
     ) {
         return Option.of(monthRange)
                 .map(date -> expenseService
                         .expensesGroupedByCategories(date, userAccountIdentifier)
+                        .stream()
+                        .map(expenseMapper::from)
+                        .toList()
+                ).get();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/grouped-by-is-fixed")
+    public Collection<ExpenseGroupResponseV1> groupExpensesByIsFixed(
+            @RequestHeader(name = X_USER_IDENTIFIER_HEADER, required = false) final UUID userAccountIdentifier,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM") Date monthRange
+    ) {
+        return Option.of(monthRange)
+                .map(date -> expenseService
+                        .expensesGroupedByIsFixed(date, userAccountIdentifier)
                         .stream()
                         .map(expenseMapper::from)
                         .toList()

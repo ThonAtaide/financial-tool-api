@@ -3,7 +3,6 @@ package br.com.financialtoolapi.application.ports.in.business;
 import br.com.financialtoolapi.application.dtos.in.ExpenseInputDto;
 import br.com.financialtoolapi.application.dtos.out.ExpenseGroupOutputDto;
 import br.com.financialtoolapi.application.dtos.out.ExpenseOutputDto;
-import lombok.NonNull;
 import org.springframework.data.domain.Page;
 
 import java.util.Date;
@@ -29,4 +28,6 @@ public interface ExpenseManagementPort {
     void deleteExpenseById(Long expenseId, UUID userAccountIdentifier);
 
     Set<ExpenseGroupOutputDto> expensesGroupedByCategories(Date monthRange, UUID userAccountIdentifier);
+
+    Set<ExpenseGroupOutputDto> expensesGroupedByIsFixed(Date monthRange, UUID userAccountIdentifier);
 }

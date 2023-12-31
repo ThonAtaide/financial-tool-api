@@ -35,6 +35,7 @@ public class ExpenseManagementAdapter implements ExpenseManagementPort {
     private final DeleteExpenseByIdUseCase deleteExpenseByIdUseCase;
     private final FindAllExpensesUseCase findAllExpensesUseCase;
     private final GroupExpenseByCategoriesUseCase groupExpenseByCategoriesUseCase;
+    private final GroupExpenseByIsFixedUseCase groupExpenseByIsFixedUseCase;
     private final MessageSource messageSource;
 
     @Override
@@ -98,6 +99,14 @@ public class ExpenseManagementAdapter implements ExpenseManagementPort {
             @NonNull final UUID userAccountIdentifier
     ) {
         return groupExpenseByCategoriesUseCase.groupExpenseByCategories(monthRange, userAccountIdentifier);
+    }
+
+    @Override
+    public Set<ExpenseGroupOutputDto> expensesGroupedByIsFixed(
+            @NonNull final Date monthRange,
+            @NonNull final UUID userAccountIdentifier
+    ) {
+        return groupExpenseByIsFixedUseCase.groupExpenseByIsFixed(monthRange, userAccountIdentifier);
     }
 
     private void validateIfUserHasAuthorization(

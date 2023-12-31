@@ -1,4 +1,6 @@
 package br.com.financialtoolapi.controller.v1.response;
 
-public record ExpenseGroupResponseV1(String category, long numberOfRegisters) {
+import java.math.BigDecimal;
+
+public record ExpenseGroupResponseV1(String label, BigDecimal amount) {
 }
