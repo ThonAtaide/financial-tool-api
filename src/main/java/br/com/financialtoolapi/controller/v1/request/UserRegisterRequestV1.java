@@ -1,5 +1,6 @@
 package br.com.financialtoolapi.controller.v1.request;
 
+import br.com.financialtoolapi.infrastructure.validations.annotations.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -18,6 +19,7 @@ public record UserRegisterRequestV1(
         @NotBlank(message = "{sign-up.password.too-short}")
         String password,
 
+        @Email
         @NotBlank(message = "{sign-up.email.not-blank}")
         String email,
 

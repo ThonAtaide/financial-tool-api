@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -84,11 +83,9 @@ public class ExpenseController {
             @RequestHeader(required = false, defaultValue = "20") int pageSize,
             @RequestParam Map<String, String> queryParams
     ) {
-        return Option.of(PageRequest.of(page, pageSize))
-                .map(pageable -> expenseService
+        return expenseService
                         .findAllExpenses(page, pageSize, queryParams, userAccountIdentifier)
-                        .map(expenseMapper::from)
-                ).get();
+                        .map(expenseMapper::from);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

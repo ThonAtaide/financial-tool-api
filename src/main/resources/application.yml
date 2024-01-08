@@ -20,12 +20,12 @@ spring:
     postgressql:
       transactional-lock: false
 
-logging:
-  level:
-    org.hibernate: TRACE
+#logging:
+#  level:
+#    org.hibernate: TRACE
 
 
 financial-tool:
   jwt-properties:
-    token-duration-seconds: 600
+    token-duration-seconds: 1200
 
