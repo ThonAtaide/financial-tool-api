@@ -19,7 +19,7 @@ public record UserRegisterRequestV1(
         @NotBlank(message = "{sign-up.password.too-short}")
         String password,
 
-        @Email
+//        @Email
         @NotBlank(message = "{sign-up.email.not-blank}")
         String email,
 
