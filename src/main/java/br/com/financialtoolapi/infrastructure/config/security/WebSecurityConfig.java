@@ -1,10 +1,8 @@
 package br.com.financialtoolapi.infrastructure.config.security;
 
 import br.com.financialtoolapi.application.ports.in.business.UserAccountManagementPort;
-import br.com.financialtoolapi.application.ports.out.security.AuthenticationFrameworkWrapper;
 import br.com.financialtoolapi.infrastructure.config.security.filters.HeaderAppenderFilter;
 import br.com.financialtoolapi.infrastructure.config.security.resolvers.BearerTokenCookieResolver;
-import br.com.financialtoolapi.infrastructure.security.services.LocalAuthenticationServiceFramework;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -66,8 +64,8 @@ public class WebSecurityConfig {
     public CorsFilter corsFilter() {
         var source = new UrlBasedCorsConfigurationSource();
         var config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(List.of("*"));
         config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(List.of("http://localhost:3000"));
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);

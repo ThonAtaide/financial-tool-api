@@ -15,7 +15,7 @@ public class UserFactory {
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(),
-                UUID.randomUUID().toString()
+                UUID.randomUUID().toString().concat("@gmail.com")
         );
     }
 

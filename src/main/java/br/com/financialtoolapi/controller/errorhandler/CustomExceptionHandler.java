@@ -30,6 +30,7 @@ public class CustomExceptionHandler {
 
     public static final String UNIDENTIFIED_ERROR_DEVELOPER_MESSAGE = "Unexpected error, contact administrator with correlation id %s";
     public static final String ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE = "Payload didn't attend the expectations and request couldn't be reached.";
+    public static final String SIGN_IN_BAD_CREDENTIALS_ERROR_MESSAGE = "sign-in.bad-credentials.error-message";
     private final MessageSource messageSource;
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -69,7 +70,7 @@ public class CustomExceptionHandler {
         final ErrorResponse errorResponse = buildErrorResponse(
                 AUTHENTICATION_FAIL_BAD_CREDENTIALS,
                 request,
-                List.of(),
+                List.of(InternationalizationUtils.getMessage(messageSource, SIGN_IN_BAD_CREDENTIALS_ERROR_MESSAGE)),
                 ex.getMessage()
         );
         return ResponseEntity

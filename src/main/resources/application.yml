@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/postgres'
-    username: 'postgres'
-    password: 'postgres'
+    url: 'jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:postgres}'
+    username: '${DATABASE_USERNAME:postgres}'
+    password: '${DATABASE_PASSWORD:postgres}'
     driverClassName: 'org.postgresql.Driver'
   jpa:
     generate-ddl: false
@@ -14,18 +14,18 @@ spring:
         jdbc:
           time_zone: UTC
   flyway:
-    url: 'jdbc:postgresql://localhost:5432/postgres'
-    username: 'postgres'
-    password: 'postgres'
+    url: 'jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:postgres}'
+    username: '${FLYWAY_USERNAME:postgres}'
+    password: '${FLYWAY_PASSWORD:postgres}'
     postgressql:
       transactional-lock: false
 
-#logging:
-#  level:
-#    org.hibernate: TRACE
+logging:
+  level:
+    root: INFO
 
 
 financial-tool:
   jwt-properties:
-    token-duration-seconds: 1200
+    token-duration-seconds: 12000
 

@@ -1,5 +1,20 @@
 version: '3.3'
 services:
+  fin-too-api:
+    container_name: 'financial_tool_api'
+    build: .
+    environment:
+      DATABASE_HOST: fin-tool-db
+      DATABASE_PORT: "5432"
+      DATABASE_NAME: "postgres"
+      DATABASE_USERNAME: "postgres"
+      DATABASE_PASSWORD: "postgres"
+      FLYWAY_USERNAME: "postgres"
+      FLYWAY_PASSWORD: "postgres"
+    ports:
+      - 8080:8080
+    depends_on:
+      - fin-tool-db
   fin-tool-db:
     image: postgres:14.1-alpine
     environment:

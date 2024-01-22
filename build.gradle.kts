@@ -22,7 +22,7 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
 
-tasks.withType<Jar> {
+tasks.named<Jar>("jar") {
     enabled = false
 }
 

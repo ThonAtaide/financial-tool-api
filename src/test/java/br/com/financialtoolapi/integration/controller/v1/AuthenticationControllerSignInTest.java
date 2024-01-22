@@ -60,7 +60,8 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
             )
     void testBadCredentialsSignInWhenUsernameIsWrong() {
         final UserCredentialDataEntity userCredentialData = createUserAccountOnDatabase();
-        final String expectedErrorTitle = "Invalid username or password.";
+        final String expectedErrorTitle = "Authentication failed.";
+        final String expectedErrorMessage = "Invalid username or password.";
         final LoginRequestV1 loginRequestV1 = new LoginRequestV1(
                 UUID.randomUUID().toString(),
                 userCredentialData.getPassword()
@@ -80,7 +81,8 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
         assertThat(response.getBody().statusCode()).isEqualTo(AUTHENTICATION_FAIL_BAD_CREDENTIALS.getHttpStatus().value());
         assertThat(response.getBody().timestamp()).isNotNull();
         assertThat(response.getBody().instance()).isEqualTo(SIGN_IN_REQUEST_URL);
-        assertThat(response.getBody().errors().size()).isEqualTo(0);
+        assertThat(response.getBody().errors().size()).isEqualTo(1);
+        assertThat(response.getBody().errors().get(0)).isEqualTo(expectedErrorMessage);
         assertThat(response.getBody().developerInfo()).isNotNull();
 
     }
