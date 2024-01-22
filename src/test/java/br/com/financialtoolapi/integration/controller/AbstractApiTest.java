@@ -1,10 +1,12 @@
 package br.com.financialtoolapi.integration.controller;
 
+import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
 import br.com.financialtoolapi.controller.v1.request.LoginRequestV1;
 import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.application.domain.repositories.UserCredentialDataEntityRepository;
 import br.com.financialtoolapi.factory.UserFactory;
+import br.com.financialtoolapi.infrastructure.config.properties.UserRegisterAllowedEmailsProperties;
 import br.com.financialtoolapi.integration.AbstractIntegrationTest;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
@@ -33,6 +35,9 @@ public abstract class AbstractApiTest extends AbstractIntegrationTest {
     @Autowired
     private UserCredentialDataEntityRepository userCredentialDataEntityRepository;
 
+    @Autowired
+    protected UserRegisterAllowedEmailsProperties userRegisterAllowedEmailsProperties;
+
     @BeforeEach
     void init() {
         CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(List.of()).build();
@@ -48,9 +53,12 @@ public abstract class AbstractApiTest extends AbstractIntegrationTest {
     }
 
     protected UserCredentialDataEntity createUserAccountOnDatabase() {
+        final String userEmail = userRegisterAllowedEmailsProperties.getEmailsList().get(0);
         final String password = UUID.randomUUID().toString();
         final UserCredentialDataEntity userCredentialData = UserFactory
                 .buildUserCredentialsEntity(passwordEncoder.encode(password));
+        final UserAccountEntity userAccount = userCredentialData.getUserAccount();
+        userAccount.setEmail(userEmail);
         final UserCredentialDataEntity createdUser = userCredentialDataEntityRepository
                 .saveAndFlush(userCredentialData);
         createdUser.setPassword(password);

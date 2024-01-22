@@ -1,6 +1,7 @@
 package br.com.financialtoolapi;
 
 import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
+import br.com.financialtoolapi.infrastructure.config.properties.UserRegisterAllowedEmailsProperties;
 import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,7 +12,7 @@ import java.util.TimeZone;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableConfigurationProperties(value = {JwtProperties.class})
+@EnableConfigurationProperties(value = {JwtProperties.class, UserRegisterAllowedEmailsProperties.class})
 public class FinancialToolApiApplication {
 
     public static void main(String[] args) {

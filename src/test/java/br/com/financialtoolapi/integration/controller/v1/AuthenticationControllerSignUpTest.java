@@ -1,5 +1,8 @@
 package br.com.financialtoolapi.integration.controller.v1;
 
+import br.com.financialtoolapi.application.validations.userinfo.ValidateIfEmailIsAllowedByWhiteLists;
+import br.com.financialtoolapi.application.validations.userinfo.ValidateIfEmailIsAlreadyUsed;
+import br.com.financialtoolapi.application.validations.userinfo.ValidateIfUsernameIsAvailable;
 import br.com.financialtoolapi.controller.v1.request.UserRegisterRequestV1;
 import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
 import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
@@ -31,10 +34,11 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
             "And a token on cookie")
     void testSuccessfullySignUpWhenUserInsertAValidPayload() {
         final String nickname = UUID.randomUUID().toString().substring(0, 9);
+        final String email = userRegisterAllowedEmailsProperties.getEmailsList().get(0);
         final var userRegisterRequest = new UserRegisterRequestV1(
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(),
-                UUID.randomUUID().toString(),
+                email,
                 nickname
         );
 
@@ -89,13 +93,14 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
             "and a error response describing validation data error."
     )
     void testWhenUserSignUpPayloadHasAUsernameAlreadyUsedByOtherUser() {
+        final String email = userRegisterAllowedEmailsProperties.getEmailsList().get(0);
         final String expectedErrorTitle = "Invalid or incomplete data.";
         final List<String> expectedErrorMessages = List.of("The username is already taken.");
         final UserCredentialDataEntity userCredentialData = createUserAccountOnDatabase();
         final UserRegisterRequestV1 userRegisterRequest = new UserRegisterRequestV1(
                 userCredentialData.getUsername(),
                 UUID.randomUUID().toString(),
-                UUID.randomUUID().toString(),
+                email,
                 UUID.randomUUID().toString().substring(0, 9)
         );
 
@@ -115,6 +120,41 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
         assertThat(response.getBody().instance()).isEqualTo(SIGN_UP_REQUEST_URL);
         assertThat(response.getBody().errors().containsAll(expectedErrorMessages)).isTrue();
         assertThat(response.getBody().developerInfo()).isEqualTo(String.format(DETAILED_ERROR_MESSAGE, userRegisterRequest.username()));
+    }
 
+    @Test
+    @DisplayName("Given that user sign up payload has a email already in use " +
+            "When user submit the request " +
+            "Then api should return https status BAD REQUEST, " +
+            "and a error response describing validation data error."
+    )
+    void testWhenUserSignUpPayloadHasAEmailAlreadyUsedByOtherUser() {
+        final String expectedErrorTitle = "Invalid or incomplete data.";
+        final List<String> expectedErrorMessages = List.of("The email is already taken.");
+        final UserCredentialDataEntity userCredentialData = createUserAccountOnDatabase();
+        final String email = userCredentialData.getUserAccount().getEmail();
+        final UserRegisterRequestV1 userRegisterRequest = new UserRegisterRequestV1(
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                email,
+                UUID.randomUUID().toString().substring(0, 9)
+        );
+
+        final ResponseEntity<ErrorResponse> response = restTemplate
+                .postForEntity(
+                        concatServerUrlWithResourcePath(SIGN_UP_REQUEST_URL),
+                        userRegisterRequest,
+                        ErrorResponse.class
+                );
+
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL.getHttpStatus());
+        assertThat(response.getBody().title()).isEqualTo(expectedErrorTitle);
+        assertThat(response.getBody().errorType()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL);
+        assertThat(response.getBody().statusCode()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL.getHttpStatus().value());
+        assertThat(response.getBody().timestamp()).isNotNull();
+        assertThat(response.getBody().instance()).isEqualTo(SIGN_UP_REQUEST_URL);
+        assertThat(response.getBody().errors().containsAll(expectedErrorMessages)).isTrue();
+        assertThat(response.getBody().developerInfo()).isEqualTo(String.format(ValidateIfEmailIsAlreadyUsed.DETAILED_ERROR_MESSAGE, email));
     }
 }

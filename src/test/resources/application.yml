@@ -13,5 +13,11 @@ spring:
         dialect: 'org.hibernate.dialect.H2Dialect'
 
 financial-tool:
+  white-lists:
+    user-allowed-emails:
+      enable: true
+      emails-list:
+        - ${random.uuid}
+        - ${random.uuid}
   jwt-properties:
     token-duration-seconds: 2

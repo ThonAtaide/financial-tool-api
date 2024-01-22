@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class ValidateIfEmailIsAvailable extends AbstractUserInfoValidation {
+public class ValidateIfEmailIsAlreadyUsed extends AbstractUserInfoValidation {
 
     public static final String DETAILED_ERROR_MESSAGE = "The email %s has already be taken.";
     private final FindUserAccountByEmailUseCase findUserAccountByEmailUseCase;
 
-    public ValidateIfEmailIsAvailable(
+    public ValidateIfEmailIsAlreadyUsed(
             final MessageSource messageSource,
             final FindUserAccountByEmailUseCase findUserAccountByEmailUseCase
     ) {
@@ -23,7 +23,7 @@ public class ValidateIfEmailIsAvailable extends AbstractUserInfoValidation {
     }
 
     @Override
-    public void validate(UserRegisterInputDto userRegister) {
+    public void validate(final UserRegisterInputDto userRegister) {
         findUserAccountByEmailUseCase
                 .fetchUserAccountByEmail(userRegister.email())
                 .ifPresent(it -> {
