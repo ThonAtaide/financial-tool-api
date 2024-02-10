@@ -93,7 +93,7 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
             "and a error response describing validation data error."
     )
     void testWhenUserSignUpPayloadHasAUsernameAlreadyUsedByOtherUser() {
-        final String email = userRegisterAllowedEmailsProperties.getEmailsList().get(0);
+        final String email = userRegisterAllowedEmailsProperties.getEmailsList().get(1);
         final String expectedErrorTitle = "Invalid or incomplete data.";
         final List<String> expectedErrorMessages = List.of("The username is already taken.");
         final UserCredentialDataEntity userCredentialData = createUserAccountOnDatabase();

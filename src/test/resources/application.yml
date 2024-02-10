@@ -16,8 +16,6 @@ financial-tool:
   white-lists:
     user-allowed-emails:
       enable: true
-      emails-list:
-        - ${random.uuid}
-        - ${random.uuid}
+      emails-list: '${random.uuid},${random.uuid}'
   jwt-properties:
     token-duration-seconds: 2
