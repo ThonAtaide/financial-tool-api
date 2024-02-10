@@ -1,6 +1,5 @@
 #!/bin/bash
 
-SELECTED_OPTION
 
 createInternalNetwork() {
   echo "####### Please insert the private network name #######"
@@ -82,16 +81,53 @@ checkOperationResult() {
 }
 
 createDatabase() {
+  echo "##### Database creation menu #####"
+  echo "##### Please select the network (splited by ',') #####"
+  selectNetworkMenu
+  echo "##### Please select the volume #####"
+  selectVolumeMenu
   echo "####### Please insert the follow info #######"
   printf "Database user: "
   read -r DATABASE_USER
   printf "Database password: "
   read -rs DATABASE_PASSWORD
   printf "\nNetworks (split by comma): "
-  read -r DATABASE_NETWORKS
-  printf "Database volume name: "
-  read -r DATABASE_VOLUME
-  createDatabaseContainer "$DATABASE_NETWORKS" "$DATABASE_USER" "$DATABASE_PASSWORD" "$DATABASE_VOLUME"
+
+  createDatabaseContainer "$SELECTED_NETWORK" "$DATABASE_USER" "$DATABASE_PASSWORD" "$SELECTED_VOLUME"
+}
+
+selectNetworkMenu() {
+  NETWORKS=($(docker network ls | awk '{ print $2 }' | tail -n +2))
+  NETWORKS_LENGTH=${!NETWORKS[@]}
+  SELECTED_NETWORK_NUMBER=999999
+  SELECTED_NETWORK=
+  while [ -z "$SELECTED_NETWORK" ] ;
+  do
+    for index in $NETWORKS_LENGTH;
+      do
+        echo "$index - ${NETWORKS[$index]}"
+      done
+      printf "Please select the network number: "
+      read -r SELECTED_NETWORK_NUMBER
+      SELECTED_NETWORK="${NETWORKS[$SELECTED_NETWORK_NUMBER]}"
+  done
+}
+
+selectVolumeMenu() {
+  VOLUMES=($(docker volume ls | awk '{ print $2 }' | tail -n +2))
+  VOLUMES_LENGTH=${!VOLUMES[@]}
+  SELECTED_VOLUMES_NUMBER=999999
+  SELECTED_VOLUME=
+  while [ -z "$SELECTED_VOLUME" ] ;
+  do
+    for index in $VOLUMES_LENGTH;
+      do
+        echo "$index - ${VOLUMES[$index]}"
+      done
+      printf "Please select the network number: "
+      read -r SELECTED_VOLUMES_NUMBER
+      SELECTED_VOLUME="${VOLUMES[SELECTED_VOLUMES_NUMBER]}"
+  done
 }
 
 showMenu() {
@@ -99,7 +135,7 @@ showMenu() {
   echo "####### Please select an option #######"
   echo "0- Exit."
   echo "1- Create private network."
-  echo "2- Create private public."
+  echo "2- Create public network."
   echo "3- Create database volume."
   echo "4- Create database."
   printf "Selected option: "
@@ -110,10 +146,18 @@ while [ -z "$SELECTED_OPTION" ] || [ "$SELECTED_OPTION" -ne 0 ];
 do
   showMenu
   case "$SELECTED_OPTION" in
-    1) createInternalNetwork;;
-    2) createPublicNetwork;;
-    3) createDatabaseVolume;;
-    4) createDatabase;;
+    1)
+      clear >$(tty)
+      createInternalNetwork;;
+    2)
+      clear >$(tty)
+      createPublicNetwork;;
+    3)
+      clear >$(tty)
+      createDatabaseVolume;;
+    4)
+      clear >$(tty)
+      createDatabase;;
   esac
 done
 echo "Server setup completed"
