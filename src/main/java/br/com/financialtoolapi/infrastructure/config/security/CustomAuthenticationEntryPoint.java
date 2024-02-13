@@ -1,7 +1,7 @@
 package br.com.financialtoolapi.infrastructure.config.security;
 
-import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
 import br.com.financialtoolapi.application.utils.InternationalizationUtils;
+import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +25,7 @@ import static br.com.financialtoolapi.controller.errorhandler.ErrorType.AUTHENTI
 @RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private static final String  MISSING_ACCESS_TOKEN_MESSAGE_CODE= "sign-in.access-token-missing.error-message";
+    private static final String MISSING_ACCESS_TOKEN_MESSAGE_CODE = "sign-in.access-token-missing.error-message";
 
     private final ObjectMapper objectMapper;
     private final MessageSource messageSource;

@@ -1,8 +1,8 @@
 package br.com.financialtoolapi.infrastructure.config.security;
 
 import br.com.financialtoolapi.application.ports.in.business.UserAccountManagementPort;
-import br.com.financialtoolapi.infrastructure.config.security.filters.BearerTokenFilter;
 import br.com.financialtoolapi.infrastructure.config.security.filters.HeaderAppenderFilter;
+import br.com.financialtoolapi.infrastructure.config.security.filters.JwtTokenFilter;
 import br.com.financialtoolapi.infrastructure.security.services.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -42,7 +42,7 @@ public class WebSecurityConfig {
 
         registerFilters(
                 httpSecurity,
-                new BearerTokenFilter(jwtTokenService),
+                new JwtTokenFilter(jwtTokenService),
                 new HeaderAppenderFilter(userAccountPort, messageSource)
         ).cors(Customizer.withDefaults())
                 .exceptionHandling((errorHandler) -> {
@@ -67,12 +67,12 @@ public class WebSecurityConfig {
 
     private HttpSecurity registerFilters(
             final HttpSecurity httpSecurity,
-            final BearerTokenFilter bearerTokenFilter,
+            final JwtTokenFilter jwtTokenFilter,
             final HeaderAppenderFilter headerAppenderFilter
     ) {
         return httpSecurity
-                .addFilterBefore(bearerTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(headerAppenderFilter, BearerTokenFilter.class);
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(headerAppenderFilter, JwtTokenFilter.class);
     }
 
     @Bean

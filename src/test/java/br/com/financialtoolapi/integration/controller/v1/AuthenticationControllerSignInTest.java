@@ -1,9 +1,9 @@
 package br.com.financialtoolapi.integration.controller.v1;
 
-import br.com.financialtoolapi.controller.v1.request.LoginRequestV1;
-import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
-import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
+import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
+import br.com.financialtoolapi.controller.v1.request.LoginRequestV1;
+import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.integration.controller.AbstractApiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,10 +14,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.UUID;
 
+import static br.com.financialtoolapi.controller.errorhandler.CustomExceptionHandler.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
 import static br.com.financialtoolapi.controller.errorhandler.ErrorType.AUTHENTICATION_FAIL_BAD_CREDENTIALS;
 import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PROVIDED_DATA_VALIDATION_FAIL;
-import static br.com.financialtoolapi.controller.errorhandler.CustomExceptionHandler.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
-//import static br.com.financialtoolapi.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class AuthenticationControllerSignInTest extends AbstractApiTest {
@@ -57,7 +56,7 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
             "When user try sign in with wrong username " +
             "Then api should return https status UNAUTHORIZED, " +
             "and a error response describing bad credentials error."
-            )
+    )
     void testBadCredentialsSignInWhenUsernameIsWrong() {
         final UserCredentialDataEntity userCredentialData = createUserAccountOnDatabase();
         final String expectedErrorTitle = "Authentication failed.";

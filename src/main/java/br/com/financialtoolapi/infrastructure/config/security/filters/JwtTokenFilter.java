@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class BearerTokenFilter extends OncePerRequestFilter {
+public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
 

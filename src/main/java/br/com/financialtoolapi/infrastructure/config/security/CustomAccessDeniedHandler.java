@@ -9,10 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
@@ -21,14 +19,13 @@ import java.time.Instant;
 import java.util.List;
 
 import static br.com.financialtoolapi.controller.errorhandler.ErrorType.ACCESS_FORBIDDEN;
-import static br.com.financialtoolapi.controller.errorhandler.ErrorType.AUTHENTICATION_TOKEN_MISSING;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
-    private static final String  RESOURCE_ACCESS_FORBIDDEN = "resource.access-forbidden.error-message";
+    private static final String RESOURCE_ACCESS_FORBIDDEN = "resource.access-forbidden.error-message";
 
     private final ObjectMapper objectMapper;
     private final MessageSource messageSource;

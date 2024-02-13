@@ -84,8 +84,8 @@ public class ExpenseController {
             @RequestParam Map<String, String> queryParams
     ) {
         return expenseService
-                        .findAllExpenses(page, pageSize, queryParams, userAccountIdentifier)
-                        .map(expenseMapper::from);
+                .findAllExpenses(page, pageSize, queryParams, userAccountIdentifier)
+                .map(expenseMapper::from);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

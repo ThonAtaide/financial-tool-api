@@ -1,21 +1,24 @@
 package br.com.financialtoolapi.controller.v1;
 
+import br.com.financialtoolapi.application.dtos.out.LoggedUserDataDto;
 import br.com.financialtoolapi.application.ports.in.business.UserAccountManagementPort;
+import br.com.financialtoolapi.application.ports.in.security.LocalAuthenticationPort;
 import br.com.financialtoolapi.controller.v1.mapper.UserDataMapper;
 import br.com.financialtoolapi.controller.v1.request.LoginRequestV1;
 import br.com.financialtoolapi.controller.v1.request.UserRegisterRequestV1;
 import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
-import br.com.financialtoolapi.utils.CookieUtils;
-import br.com.financialtoolapi.application.dtos.out.LoggedUserDataDto;
-import br.com.financialtoolapi.application.ports.in.security.LocalAuthenticationPort;
 import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
 import br.com.financialtoolapi.infrastructure.security.services.JwtTokenService;
+import br.com.financialtoolapi.utils.CookieUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController

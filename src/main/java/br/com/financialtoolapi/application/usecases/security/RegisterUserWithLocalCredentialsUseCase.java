@@ -1,9 +1,9 @@
 package br.com.financialtoolapi.application.usecases.security;
 
-import br.com.financialtoolapi.application.exceptions.EntityCreationException;
 import br.com.financialtoolapi.application.domain.repositories.UserCredentialDataEntityRepository;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
 import br.com.financialtoolapi.application.dtos.out.LoggedUserDataDto;
+import br.com.financialtoolapi.application.exceptions.EntityCreationException;
 import br.com.financialtoolapi.application.mapper.UserRegisterMapper;
 import br.com.financialtoolapi.application.utils.InternationalizationUtils;
 import lombok.NonNull;

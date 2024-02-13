@@ -28,7 +28,7 @@ public class GroupExpenseByIsFixedUseCase {
                 .stream()
                 .map(it -> {
                     final boolean isFixed = (boolean) it.get("isFixed");
-                    final String label = isFixed? "Fixed" : "Not fixed";
+                    final String label = isFixed ? "Fixed" : "Not fixed";
                     final BigDecimal amount = (BigDecimal) it.get("amount");
                     return new ExpenseGroupOutputDto(label, amount);
                 }).collect(Collectors.toSet());

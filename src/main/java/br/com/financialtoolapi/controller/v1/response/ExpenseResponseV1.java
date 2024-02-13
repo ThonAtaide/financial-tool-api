@@ -2,7 +2,6 @@ package br.com.financialtoolapi.controller.v1.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.springframework.format.annotation.NumberFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;

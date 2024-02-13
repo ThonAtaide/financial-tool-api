@@ -1,12 +1,10 @@
 package br.com.financialtoolapi.integration.controller.v1;
 
-import br.com.financialtoolapi.application.validations.userinfo.ValidateIfEmailIsAllowedByWhiteLists;
-import br.com.financialtoolapi.application.validations.userinfo.ValidateIfEmailIsAlreadyUsed;
-import br.com.financialtoolapi.application.validations.userinfo.ValidateIfUsernameIsAvailable;
-import br.com.financialtoolapi.controller.v1.request.UserRegisterRequestV1;
-import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
-import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
+import br.com.financialtoolapi.application.validations.userinfo.ValidateIfEmailIsAlreadyUsed;
+import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
+import br.com.financialtoolapi.controller.v1.request.UserRegisterRequestV1;
+import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.integration.controller.AbstractApiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,10 +15,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.UUID;
 
-import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PROVIDED_DATA_VALIDATION_FAIL;
-import static br.com.financialtoolapi.controller.errorhandler.CustomExceptionHandler.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
-//import static br.com.financialtoolapi.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
 import static br.com.financialtoolapi.application.validations.userinfo.ValidateIfUsernameIsAvailable.DETAILED_ERROR_MESSAGE;
+import static br.com.financialtoolapi.controller.errorhandler.CustomExceptionHandler.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
+import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PROVIDED_DATA_VALIDATION_FAIL;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class AuthenticationControllerSignUpTest extends AbstractApiTest {

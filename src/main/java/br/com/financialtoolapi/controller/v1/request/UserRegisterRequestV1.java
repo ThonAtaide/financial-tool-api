@@ -1,6 +1,5 @@
 package br.com.financialtoolapi.controller.v1.request;
 
-import br.com.financialtoolapi.infrastructure.validations.annotations.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

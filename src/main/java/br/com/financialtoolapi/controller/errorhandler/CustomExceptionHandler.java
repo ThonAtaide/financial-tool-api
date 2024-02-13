@@ -1,6 +1,5 @@
 package br.com.financialtoolapi.controller.errorhandler;
 
-import br.com.financialtoolapi.application.exceptions.InvalidQueryParamFormatException;
 import br.com.financialtoolapi.application.exceptions.ResourceNotFoundException;
 import br.com.financialtoolapi.application.exceptions.UnexpectedInternalErrorException;
 import br.com.financialtoolapi.application.exceptions.ValidationDataException;
