@@ -1,19 +1,21 @@
 package br.com.financialtoolapi.utils;
 
+import jakarta.servlet.http.Cookie;
 import lombok.experimental.UtilityClass;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 
 @UtilityClass
 public class CookieUtils {
 
-    public static final String ACCESS_TOKEN_COOKIE = "access_token";
+    public static final String AUTHORIZATION_TOKEN_COOKIE = "Authorization";
 
     public ResponseCookie buildCookieWith(
             final String token,
-            final Long cookieDurationSeconds
+            final Long cookieDurationMilliSeconds
     ) {
-        return ResponseCookie.from(ACCESS_TOKEN_COOKIE, token)
-                .maxAge(cookieDurationSeconds)
+        return ResponseCookie.from(HttpHeaders.AUTHORIZATION, token)
+                .maxAge(cookieDurationMilliSeconds/1000)
                 .httpOnly(true)
                 .path("/")
                 .build();

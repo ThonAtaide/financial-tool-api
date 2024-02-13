@@ -19,7 +19,7 @@ import java.util.UUID;
 
 import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PROVIDED_DATA_VALIDATION_FAIL;
 import static br.com.financialtoolapi.controller.errorhandler.CustomExceptionHandler.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
-import static br.com.financialtoolapi.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
+//import static br.com.financialtoolapi.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
 import static br.com.financialtoolapi.application.validations.userinfo.ValidateIfUsernameIsAvailable.DETAILED_ERROR_MESSAGE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -54,7 +54,7 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
         assertThat(response.getBody().nickname()).isEqualTo(nickname);
         assertThat(cookies).isNotNull();
         assertThat(cookies.isEmpty()).isFalse();
-        assertThat(cookies.get(0)).startsWith(ACCESS_TOKEN_COOKIE);
+        assertThat(cookies.get(0)).startsWith(HttpHeaders.AUTHORIZATION);
     }
 
     @Test

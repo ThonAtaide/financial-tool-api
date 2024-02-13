@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: 'Kathon-Financial-Tool'
   datasource:
     url: 'jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:postgres}'
     username: '${DATABASE_USERNAME:postgres}'
@@ -22,7 +24,7 @@ spring:
 
 logging:
   level:
-    root: INFO
+    root: DEBUG
 
 
 financial-tool:
@@ -31,5 +33,6 @@ financial-tool:
       enable: true
       emails-list: '${ALLOWED_EMAIL_LIST:thon_ataide10@hotmail.com}'
   jwt-properties:
-    token-duration-seconds: 12000
+    token-duration-milliseconds: 1200000
+    secret-key: '${SECRET-KEY:${random.uuid}}'
 

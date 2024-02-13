@@ -104,8 +104,8 @@ public class ExpenseCategoriesTest extends AbstractApiTest {
     @Test
     @DisplayName("Given that user sign in successfully" +
             "When user try to get specific expense category " +
-            "Then api should return status code OK with expense category data.")
-    void testPostRequestToCreateExpenseCategoryWhenUserHasSignIn() {
+            "Then api should return status code Forbidden.")
+    void testPostRequestToAttemptCreateExpenseCategoryWhenUserHasSignIn() {
         final ExpenseCategoryEntity newCategory = ExpenseCategoryFactory.buildWith();
         final HttpHeaders headers = signInRandomUserAndExtractAccessTokenHeaders();
         final ResponseEntity<ErrorResponse> response = restTemplate

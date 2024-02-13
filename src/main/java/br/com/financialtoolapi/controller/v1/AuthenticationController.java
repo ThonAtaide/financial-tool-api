@@ -9,7 +9,7 @@ import br.com.financialtoolapi.utils.CookieUtils;
 import br.com.financialtoolapi.application.dtos.out.LoggedUserDataDto;
 import br.com.financialtoolapi.application.ports.in.security.LocalAuthenticationPort;
 import br.com.financialtoolapi.infrastructure.config.properties.JwtProperties;
-import br.com.financialtoolapi.infrastructure.security.services.JwtService;
+import br.com.financialtoolapi.infrastructure.security.services.JwtTokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 )
 public class AuthenticationController {
 
-    private final JwtService jwtService;
+    private final JwtTokenService jwtTokenService;
     private final JwtProperties jwtProperties;
     private final LocalAuthenticationPort localAuthenticationPort;
     private final UserAccountManagementPort userAccountManagementPort;
@@ -61,9 +61,9 @@ public class AuthenticationController {
             final LoggedUserDataDto loggedUserData,
             final HttpStatus httpStatus
     ) {
-        final String jwtToken = jwtService.buildToken(loggedUserData.email());
+        final String jwtToken = jwtTokenService.buildToken(loggedUserData.email());
         final ResponseCookie cookie = CookieUtils
-                .buildCookieWith(jwtToken, jwtProperties.getTokenDurationSeconds());
+                .buildCookieWith(jwtToken, jwtProperties.getTokenDurationMilliseconds());
         return ResponseEntity
                 .status(httpStatus)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
