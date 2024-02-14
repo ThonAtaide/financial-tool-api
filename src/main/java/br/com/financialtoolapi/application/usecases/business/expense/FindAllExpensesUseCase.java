@@ -8,17 +8,19 @@ import br.com.financialtoolapi.application.utils.InternationalizationUtils;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.ap.shaded.freemarker.template.utility.NumberUtil;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.NumberUtils;
 
 import java.text.ParseException;
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.regex.Pattern;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.springframework.jdbc.support.JdbcUtils.isNumeric;
 
 @Slf4j
 @Service
@@ -40,12 +42,29 @@ public class FindAllExpensesUseCase {
     ) {
         final Date from = getFromDateOrDefaultValue(queryParams);
         final Date until = getUntilDateOrDefaultValue(queryParams);
+        final List<Long> categories = getCategories(queryParams);
+        final String description = getDescription(queryParams);
 
         return expenseRepository.findAll(
                 ExpenseRepository.buildPurchaseDateSpecification(from, until)
-                        .and(ExpenseRepository.buildOwnerAccountSpecification(userAccountIdentifier)),
+                        .and(ExpenseRepository.buildOwnerAccountSpecification(userAccountIdentifier))
+                        .and(ExpenseRepository.buildCategorySpecification(categories))
+                        .and(ExpenseRepository.buildExpenseDescriptionSpecification(description)),
                 PageRequest.of(page, pageSize, DESC, EXPENSE_FIELD_DAT_PURCHASE)
         );
+    }
+
+    private String getDescription(Map<String, String> queryParams) {
+        return queryParams.getOrDefault("description", "");
+    }
+
+    private List<Long> getCategories(final Map<String, String> queryParams) {
+        final String mapValue = queryParams.getOrDefault("categories", "");
+        final Pattern pattern = Pattern.compile("^[1-9][0-9]*$");
+        return Arrays
+                .stream(mapValue.split(","))
+                .filter(it -> pattern.matcher(it).matches())
+                .map(Long::parseLong).toList();
     }
 
     private Date convertStringParamToDate(

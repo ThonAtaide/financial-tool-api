@@ -3,15 +3,16 @@ package br.com.financialtoolapi.application.domain.repositories;
 import br.com.financialtoolapi.application.domain.entities.ExpenseEntity;
 import br.com.financialtoolapi.application.dtos.out.ExpenseGroupOutputDto;
 import jakarta.persistence.Tuple;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long>, JpaSpecificationExecutor<ExpenseEntity> {
@@ -44,5 +45,25 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long>, J
 
     static Specification<ExpenseEntity> buildOwnerAccountSpecification(final UUID ownerAccountIdentifier) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("owner").get("id"), ownerAccountIdentifier);
+    }
+
+    static Specification<ExpenseEntity> buildCategorySpecification(final List<Long> expensecategories) {
+        return (root, query, criteriaBuilder) -> {
+            if (expensecategories == null || expensecategories.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            return root.get("expenseCategory").get("id").in(expensecategories);
+        };
+    }
+
+    static Specification<ExpenseEntity> buildExpenseDescriptionSpecification(final String description) {
+        return (root, query, criteriaBuilder) -> {
+            if (description.isBlank()) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.like(
+                    criteriaBuilder.upper(root.get("description")),
+                    description.toUpperCase(Locale.ROOT).concat("%"));
+        };
     }
 }
