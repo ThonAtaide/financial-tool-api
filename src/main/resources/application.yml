@@ -26,7 +26,7 @@ financial-tool:
   white-lists:
     user-allowed-emails:
       enable: true
-      emails-list: '${ALLOWED_EMAIL_LIST:thon_ataide10@hotmail.com}'
+      emails-list: '${ALLOWED_EMAIL_LIST}'
   jwt-properties:
     token-duration-milliseconds: 1200000
     secret-key: '${SECRET-KEY:${random.uuid}}'
