@@ -22,11 +22,6 @@ spring:
     postgressql:
       transactional-lock: false
 
-logging:
-  level:
-    root: DEBUG
-
-
 financial-tool:
   white-lists:
     user-allowed-emails:

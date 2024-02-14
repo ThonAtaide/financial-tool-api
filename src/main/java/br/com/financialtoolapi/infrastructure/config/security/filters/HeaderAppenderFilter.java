@@ -32,14 +32,14 @@ public class HeaderAppenderFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse httpServletResponse,
-            FilterChain chain
+            final HttpServletRequest httpServletRequest,
+            final HttpServletResponse httpServletResponse,
+            final FilterChain chain
     ) throws ServletException, IOException {
 
         if (isUserAuthenticated()) {
             try {
-                final CustomRequestWrapper customRequestWrapper = appendAccountIdIntoHeader(request);
+                final CustomRequestWrapper customRequestWrapper = appendAccountIdIntoHeader(httpServletRequest);
                 chain.doFilter(customRequestWrapper, httpServletResponse);
             } catch (ResourceNotFoundException ex) {
                 final String errorMessage = InternationalizationUtils.getMessage(messageSource, ErrorType.AUTHENTICATION_TOKEN_MISSING.getTitleMessageCode());
@@ -57,7 +57,7 @@ public class HeaderAppenderFilter extends OncePerRequestFilter {
             }
 
         } else {
-            chain.doFilter(request, httpServletResponse);
+            chain.doFilter(httpServletRequest, httpServletResponse);
         }
     }
 

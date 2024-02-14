@@ -33,18 +33,21 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         final String token = resolveToken(httpServletRequest);
         try {
-            if (token != null) {
-                final Jws<Claims> parsedToken = jwtTokenService.validateTokenAndReturnParsedToken(token);
-                final JwtAuthentication authentication = new JwtAuthentication(parsedToken.getPayload().getSubject());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            validateJwtTokenAndSetAuthentication(token);
         } catch (Exception ex) {
-            //this is very important, since it guarantees the user is not authenticated at all
             SecurityContextHolder.clearContext();
             httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value(), ex.getMessage());
             return;
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
+    }
+
+    private void validateJwtTokenAndSetAuthentication(final String token) {
+        if (token != null) {
+            final Jws<Claims> parsedToken = jwtTokenService.validateTokenAndReturnParsedToken(token);
+            final JwtAuthentication authentication = new JwtAuthentication(parsedToken.getPayload().getSubject());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
     }
 
 
