@@ -67,9 +67,9 @@ createDatabaseContainer() {
 	echo "volume: $VOLUME_NAME"
 
 	docker run --name fin_tool_db-script --restart always --network "$NETWORK" \
-	  --volume "$VOLUME_NAME:/var/lib/db" -p "5432:5432" \
+	  --volume "$VOLUME_NAME:/var/lib/postgresql/data" -p "5432:5432" \
 	  -e POSTGRES_PASSWORD="$DATABASE_PASSWORD" -e POSTGRES_USER="$DATABASE_USER" \
-	  -e POSTGRES_DB="FINANCIAL_TOOL_DB" -d postgres
+	  -e POSTGRES_DB="financial_tool_db" -d postgres
 }
 
 checkOperationResult() {
@@ -91,13 +91,13 @@ createDatabase() {
   read -r DATABASE_USER
   printf "Database password: "
   read -rs DATABASE_PASSWORD
-  printf "\nNetworks (split by comma): "
+  printf "Networks (split by comma): "
 
   createDatabaseContainer "$SELECTED_NETWORK" "$DATABASE_USER" "$DATABASE_PASSWORD" "$SELECTED_VOLUME"
 }
 
 selectNetworkMenu() {
-  NETWORKS=($(docker network ls | awk '{ print $2 }' | tail -n +2))
+  NETWORKS=($(docker network ls | awk '{ print $2 }' | tail -n +1))
   NETWORKS_LENGTH=${!NETWORKS[@]}
   SELECTED_NETWORK_NUMBER=999999
   SELECTED_NETWORK=
@@ -114,7 +114,7 @@ selectNetworkMenu() {
 }
 
 selectVolumeMenu() {
-  VOLUMES=($(docker volume ls | awk '{ print $2 }' | tail -n +2))
+  VOLUMES=($(docker volume ls | awk '{ print $2 }' | tail -n +1))
   VOLUMES_LENGTH=${!VOLUMES[@]}
   SELECTED_VOLUMES_NUMBER=999999
   SELECTED_VOLUME=
@@ -124,10 +124,103 @@ selectVolumeMenu() {
       do
         echo "$index - ${VOLUMES[$index]}"
       done
-      printf "Please select the network number: "
+      printf "Please select the volume number: "
       read -r SELECTED_VOLUMES_NUMBER
       SELECTED_VOLUME="${VOLUMES[SELECTED_VOLUMES_NUMBER]}"
   done
+}
+
+findBackendCurrentContainerAndDelete() {
+  echo "Searching current backend container..."
+  CURRENT_BACKEND_CONTAINER=($(docker ps -a | grep backend-api* | awk '{ print $1 }' | tail -n +1))
+  if [ -n "$CURRENT_BACKEND_CONTAINER" ]; then
+      echo "Removendo container do backend atual..."
+      if [[ "$(docker rm -f "$CURRENT_BACKEND_CONTAINER")" -eq 0 ]]; then
+        echo "Oldest backend container deleted successfully"
+      else
+        echo "Error to remove oldest backend container"
+      fi
+    fi
+}
+
+runFlyway() {
+  echo "Checking existent migrations..."
+  cd
+  echo "Cloning repository..."
+  git clone https://github.com/ThonAtaide/financial-tool-api.git
+  cd financial-tool-api/src/main/resources/db/
+  MIGRATIONS_PATH=$(pwd)
+  echo "validating migrations repository..."
+
+  docker run --network="$PRIVATE_NETWORK_NAME" --rm -v "$MIGRATIONS_PATH":/flyway/sql flyway/flyway \
+  -url="jdbc:postgresql://$DATABASE_HOST:5432/financial_tool_db" -user="$FLYWAY_DATABASE_USER" -password="$FLYWAY_DATABASE_PASSWORD" -postgresql.transactional.lock=false migrate
+  cd
+  sudo rm -r financial-tool-api/
+  echo "Flyway step concluded"
+}
+
+collectBackendApplicationInfo() {
+  local INFO_LABEL=$1
+  printf '%s' "$INFO_LABEL"
+  read -r DATABASE_INFO_INPUT
+}
+
+readBackendApplicationConfigs() {
+  echo "##### Please select the database network #####"
+  selectNetworkMenu
+  PRIVATE_NETWORK_NAME=$SELECTED_NETWORK
+
+  echo "##### Please select the public network #####"
+  selectNetworkMenu
+  PUBLIC_NETWORK_NAME=$SELECTED_NETWORK
+
+  echo "##### Please provide database info #####"
+  echo "$(docker ps)"
+  collectBackendApplicationInfo "Database host: "
+  DATABASE_HOST="$DATABASE_INFO_INPUT"
+
+  collectBackendApplicationInfo "Application database user: "
+  APPLICATION_DATABASE_USER="$DATABASE_INFO_INPUT"
+
+  collectBackendApplicationInfo "Application database password: "
+  APPLICATION_DATABASE_PASSWORD="$DATABASE_INFO_INPUT"
+
+  collectBackendApplicationInfo "Flyway database user: "
+  FLYWAY_DATABASE_USER=${DATABASE_INFO_INPUT:-$APPLICATION_DATABASE_USER}
+
+  collectBackendApplicationInfo "Flyway database password: "
+  FLYWAY_DATABASE_PASSWORD=${DATABASE_INFO_INPUT:-$APPLICATION_DATABASE_PASSWORD}
+
+  collectBackendApplicationInfo "Secret key: "
+  SECRET_KEY=$DATABASE_INFO_INPUT
+
+  collectBackendApplicationInfo "Allowed emails: "
+  ALLOWED_EMAIL_LIST=$DATABASE_INFO_INPUT
+
+}
+
+createBackendContainerAndDeploy() {
+  echo "creating backend container..."
+    docker create --name backend-api --restart always -p 8080:8080 \
+    --network="$PRIVATE_NETWORK_NAME" -e DATABASE_HOST="$DATABASE_HOST" \
+     -e DATABASE_NAME="financial_tool_db" -e DATABASE_USERNAME="$APPLICATION_DATABASE_USER" \
+     -e DATABASE_PASSWORD="$APPLICATION_DATABASE_PASSWORD" -e FLYWAY_USERNAME="$FLYWAY_DATABASE_USER" \
+     -e FLYWAY_PASSWORD="$FLYWAY_DATABASE_PASSWORD" -e ALLOWED_EMAIL_LIST="$ALLOWED_EMAIL_LIST" \
+     -e SECRET-KEY="$SECRET_KEY" \
+      ataide/financial-tool-api
+  echo "Backend container created successfully."
+
+  echo "Configuring container public network..."
+  docker network connect "$PUBLIC_NETWORK_NAME" backend-api
+  echo "Backend public network successfully configured."
+  docker start backend-api
+}
+
+deployBackendApi() {
+  readBackendApplicationConfigs
+  findBackendCurrentContainerAndDelete
+  runFlyway
+  createBackendContainerAndDeploy
 }
 
 showMenu() {
@@ -138,11 +231,12 @@ showMenu() {
   echo "2- Create public network."
   echo "3- Create database volume."
   echo "4- Create database."
+  echo "5- Deploy backend api."
   printf "Selected option: "
   read -r SELECTED_OPTION
 }
 
-while [ -z "$SELECTED_OPTION" ] || [ "$SELECTED_OPTION" -ne 0 ];
+while [ -z "$SELECTED_OPTION" ] || [ -n "${SELECTED_OPTION//[0-9]/}" ] || [ "$SELECTED_OPTION" -ne 0 ];
 do
   showMenu
   case "$SELECTED_OPTION" in
@@ -158,6 +252,9 @@ do
     4)
       clear >$(tty)
       createDatabase;;
+    5)
+      clear >$(tty)
+      deployBackendApi;;
   esac
 done
 echo "Server setup completed"
