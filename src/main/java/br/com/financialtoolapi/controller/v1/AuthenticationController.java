@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
+import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +36,7 @@ public class AuthenticationController {
     private final LocalAuthenticationPort localAuthenticationPort;
     private final UserAccountManagementPort userAccountManagementPort;
     private final UserDataMapper userDataMapper = Mappers.getMapper(UserDataMapper.class);
+    private final Environment environment;
 
     @PostMapping("sign-in")
     public ResponseEntity<LoginResponseV1> login(@Valid @RequestBody final LoginRequestV1 loginRequestV1) {
@@ -46,7 +48,7 @@ public class AuthenticationController {
     @PostMapping("sign-out")
     public ResponseEntity<Void> logout() {
         final ResponseCookie cookie = CookieUtils
-                .buildCookieWith("null", 0L);
+                .buildCookieWith("null", 0L, environment.getActiveProfiles());
         return ResponseEntity
                 .noContent()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
@@ -66,7 +68,7 @@ public class AuthenticationController {
     ) {
         final String jwtToken = jwtTokenService.buildToken(loggedUserData.email());
         final ResponseCookie cookie = CookieUtils
-                .buildCookieWith(jwtToken, jwtProperties.getTokenDurationMilliseconds());
+                .buildCookieWith(jwtToken, jwtProperties.getTokenDurationMilliseconds(), environment.getActiveProfiles());
         return ResponseEntity
                 .status(httpStatus)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())

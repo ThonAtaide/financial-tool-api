@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
@@ -29,6 +30,7 @@ public class HeaderAppenderFilter extends OncePerRequestFilter {
     public static final String X_USER_IDENTIFIER_HEADER = "x_user_identifier_header";
     private final UserAccountManagementPort userAccountPort;
     private final MessageSource messageSource;
+    private final Environment environment;
 
     @Override
     protected void doFilterInternal(
@@ -43,7 +45,7 @@ public class HeaderAppenderFilter extends OncePerRequestFilter {
                 chain.doFilter(customRequestWrapper, httpServletResponse);
             } catch (ResourceNotFoundException ex) {
                 final String errorMessage = InternationalizationUtils.getMessage(messageSource, ErrorType.AUTHENTICATION_TOKEN_MISSING.getTitleMessageCode());
-                ResponseCookie tokenCookieClean = CookieUtils.buildCookieWith("", 0L);
+                ResponseCookie tokenCookieClean = CookieUtils.buildCookieWith("", 0L, environment.getActiveProfiles());
 
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 httpServletResponse.getWriter().write(errorMessage);

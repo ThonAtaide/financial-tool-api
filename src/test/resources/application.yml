@@ -13,12 +13,14 @@ spring:
     properties:
       hibernate:
         dialect: 'org.hibernate.dialect.H2Dialect'
-
+logging:
+  level:
+    root: debug
 financial-tool:
   white-lists:
     user-allowed-emails:
       enable: true
-      emails-list: '${random.uuid},${random.uuid}'
+      emails-list: '${random.uuid}@hotmail.com,${random.uuid}@gmail.com'
   jwt-properties:
     token-duration-milliseconds: 2000
     secret-key: '${random.uuid}'

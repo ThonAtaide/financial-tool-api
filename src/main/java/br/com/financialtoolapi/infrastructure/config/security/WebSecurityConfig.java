@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -37,13 +38,14 @@ public class WebSecurityConfig {
             final JwtTokenService jwtTokenService,
             final MessageSource messageSource,
             final CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
-            final CustomAccessDeniedHandler customAccessDeniedHandler
+            final CustomAccessDeniedHandler customAccessDeniedHandler,
+            final Environment environment
     ) throws Exception {
 
         registerFilters(
                 httpSecurity,
                 new JwtTokenFilter(jwtTokenService),
-                new HeaderAppenderFilter(userAccountPort, messageSource)
+                new HeaderAppenderFilter(userAccountPort, messageSource, environment)
         ).cors(Customizer.withDefaults())
                 .exceptionHandling((errorHandler) -> {
                     errorHandler.authenticationEntryPoint(customAuthenticationEntryPoint);
