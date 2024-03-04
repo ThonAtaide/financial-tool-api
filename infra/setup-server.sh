@@ -236,25 +236,32 @@ showMenu() {
   read -r SELECTED_OPTION
 }
 
-while [ -z "$SELECTED_OPTION" ] || [ -n "${SELECTED_OPTION//[0-9]/}" ] || [ "$SELECTED_OPTION" -ne 0 ];
-do
-  showMenu
-  case "$SELECTED_OPTION" in
-    1)
-      clear >$(tty)
-      createInternalNetwork;;
-    2)
-      clear >$(tty)
-      createPublicNetwork;;
-    3)
-      clear >$(tty)
-      createDatabaseVolume;;
-    4)
-      clear >$(tty)
-      createDatabase;;
-    5)
-      clear >$(tty)
-      deployBackendApi;;
-  esac
-done
-echo "Server setup completed"
+#while [ -z "$SELECTED_OPTION" ] || [ -n "${SELECTED_OPTION//[0-9]/}" ] || [ "$SELECTED_OPTION" -ne 0 ];
+#do
+#  showMenu
+#  case "$SELECTED_OPTION" in
+#    1)
+#      clear >$(tty)
+#      createInternalNetwork;;
+#    2)
+#      clear >$(tty)
+#      createPublicNetwork;;
+#    3)
+#      clear >$(tty)
+#      createDatabaseVolume;;
+#    4)
+#      clear >$(tty)
+#      createDatabase;;
+#    5)
+#      clear >$(tty)
+#      deployBackendApi;;
+#  esac
+#done
+#echo "Server setup completed"
+
+export $(cat components-name.env | egrep -v "(^#.*|^$)" | xargs)
+export $(cat containers.env | egrep -v "(^#.*|^$)" | xargs)
+./network-script.sh
+./volumes-script.sh
+./deploy-db.sh
+./deploy-backend.sh

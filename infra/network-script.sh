@@ -1,7 +1,5 @@
 #!/bin/bash
 
-PRIVATE_NETWORK_NAME="private_network"
-PUBLIC_NETWORK_NAME="public_network"
 
 checkOperationResult() {
 	if [ "$?" -eq 0 ]; then
@@ -19,7 +17,7 @@ createInternalNetwork() {
 	  docker network create -d bridge --internal "$PRIVATE_NETWORK_NAME"
 	  checkOperationResult "Network created successfully" "Network created failed"
 	else
-		echo "Skipping private network creation cause it already exists."
+		echo "Skipping private network creation cause $PRIVATE_NETWORK_NAME already exists."
 	fi
 }
 
@@ -30,7 +28,7 @@ createPublicNetwork() {
 		docker network create -d bridge "$PUBLIC_NETWORK_NAME"
 		checkOperationResult "Network created successfully" "Network created failed"
 	else
-		echo "Skipping public creation cause it already exists."
+		echo "Skipping public creation cause $PUBLIC_NETWORK_NAME already exists."
 	fi
 }
 
