@@ -1,8 +1,5 @@
 server:
   port: '${SERVER_PORT:8080}'
-logging:
-  level:
-    root: DEBUG
 spring:
   application:
     name: 'Kathon-Financial-Tool'
