@@ -12,11 +12,11 @@ public record ErrorResponse(
         String instance,
         Instant timestamp,
         String developerInfo
-        ) {
+) {
 
-        public ErrorResponse {
-               errors = new ArrayList<>(errors);
-        }
+    public ErrorResponse {
+        errors = new ArrayList<>(errors);
+    }
 
     @Override
     public List<String> errors() {

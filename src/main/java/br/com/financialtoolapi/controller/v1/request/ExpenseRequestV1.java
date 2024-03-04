@@ -1,11 +1,8 @@
 package br.com.financialtoolapi.controller.v1.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.springframework.format.annotation.NumberFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;

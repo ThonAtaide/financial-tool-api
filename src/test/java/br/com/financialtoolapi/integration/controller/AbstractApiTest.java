@@ -1,10 +1,10 @@
 package br.com.financialtoolapi.integration.controller;
 
 import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
-import br.com.financialtoolapi.controller.v1.request.LoginRequestV1;
-import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
 import br.com.financialtoolapi.application.domain.repositories.UserCredentialDataEntityRepository;
+import br.com.financialtoolapi.controller.v1.request.LoginRequestV1;
+import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.factory.UserFactory;
 import br.com.financialtoolapi.infrastructure.config.properties.UserRegisterAllowedEmailsProperties;
 import br.com.financialtoolapi.integration.AbstractIntegrationTest;

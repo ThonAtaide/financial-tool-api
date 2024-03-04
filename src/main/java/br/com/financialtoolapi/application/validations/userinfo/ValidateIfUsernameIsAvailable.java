@@ -1,8 +1,8 @@
 package br.com.financialtoolapi.application.validations.userinfo;
 
-import br.com.financialtoolapi.application.usecases.security.FindUserCredentialDataByUsernameUseCase;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
 import br.com.financialtoolapi.application.exceptions.ValidationDataException;
+import br.com.financialtoolapi.application.usecases.security.FindUserCredentialDataByUsernameUseCase;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;

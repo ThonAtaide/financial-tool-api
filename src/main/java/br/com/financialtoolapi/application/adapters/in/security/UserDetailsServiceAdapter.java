@@ -1,7 +1,7 @@
 package br.com.financialtoolapi.application.adapters.in.security;
 
-import br.com.financialtoolapi.application.usecases.security.FindUserCredentialDataByUsernameUseCase;
 import br.com.financialtoolapi.application.mapper.AuthenticationMapper;
+import br.com.financialtoolapi.application.usecases.security.FindUserCredentialDataByUsernameUseCase;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,6 +1,5 @@
 package br.com.financialtoolapi.application.domain.entities;
 
-import br.com.financialtoolapi.application.domain.entities.UserAccountEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,7 +29,7 @@ public class UserCredentialDataEntity {
     private String password;
 
     @ToString.Include
-    @OneToOne(cascade = { CascadeType.ALL })
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "USER_ACCOUNT_ID", nullable = false)
     private UserAccountEntity userAccount;
 }

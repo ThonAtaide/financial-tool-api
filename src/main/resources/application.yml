@@ -1,4 +1,8 @@
+server:
+  port: '${SERVER_PORT:8080}'
 spring:
+  application:
+    name: 'Kathon-Financial-Tool'
   datasource:
     url: 'jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:postgres}'
     username: '${DATABASE_USERNAME:postgres}'
@@ -20,17 +24,12 @@ spring:
     postgressql:
       transactional-lock: false
 
-logging:
-  level:
-    root: INFO
-
-
 financial-tool:
   white-lists:
     user-allowed-emails:
       enable: true
-      emails-list:
-        - 'thon_ataide10@hotmail.com'
+      emails-list: '${ALLOWED_EMAIL_LIST}'
   jwt-properties:
-    token-duration-seconds: 12000
+    token-duration-milliseconds: 1200000
+    secret-key: '${SECRET-KEY:${random.uuid}}'
 

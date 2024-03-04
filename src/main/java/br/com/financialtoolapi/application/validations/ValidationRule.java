@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 
 @RequiredArgsConstructor
-public abstract class ValidationRule <T> {
+public abstract class ValidationRule<T> {
 
     private final String USER_FRIENDLY_MESSAGE_CODE;
     private final MessageSource messageSource;

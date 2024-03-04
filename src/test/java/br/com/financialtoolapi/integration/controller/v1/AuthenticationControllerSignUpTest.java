@@ -1,12 +1,10 @@
 package br.com.financialtoolapi.integration.controller.v1;
 
-import br.com.financialtoolapi.application.validations.userinfo.ValidateIfEmailIsAllowedByWhiteLists;
-import br.com.financialtoolapi.application.validations.userinfo.ValidateIfEmailIsAlreadyUsed;
-import br.com.financialtoolapi.application.validations.userinfo.ValidateIfUsernameIsAvailable;
-import br.com.financialtoolapi.controller.v1.request.UserRegisterRequestV1;
-import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
-import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
+import br.com.financialtoolapi.application.validations.userinfo.ValidateIfEmailIsAlreadyUsed;
+import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
+import br.com.financialtoolapi.controller.v1.request.UserRegisterRequestV1;
+import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.integration.controller.AbstractApiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,10 +15,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.UUID;
 
-import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PROVIDED_DATA_VALIDATION_FAIL;
-import static br.com.financialtoolapi.controller.errorhandler.CustomExceptionHandler.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
-import static br.com.financialtoolapi.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
 import static br.com.financialtoolapi.application.validations.userinfo.ValidateIfUsernameIsAvailable.DETAILED_ERROR_MESSAGE;
+import static br.com.financialtoolapi.controller.errorhandler.CustomExceptionHandler.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
+import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PROVIDED_DATA_VALIDATION_FAIL;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class AuthenticationControllerSignUpTest extends AbstractApiTest {
@@ -54,7 +51,7 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
         assertThat(response.getBody().nickname()).isEqualTo(nickname);
         assertThat(cookies).isNotNull();
         assertThat(cookies.isEmpty()).isFalse();
-        assertThat(cookies.get(0)).startsWith(ACCESS_TOKEN_COOKIE);
+        assertThat(cookies.get(0)).startsWith(HttpHeaders.AUTHORIZATION);
     }
 
     @Test
@@ -93,7 +90,7 @@ public class AuthenticationControllerSignUpTest extends AbstractApiTest {
             "and a error response describing validation data error."
     )
     void testWhenUserSignUpPayloadHasAUsernameAlreadyUsedByOtherUser() {
-        final String email = userRegisterAllowedEmailsProperties.getEmailsList().get(0);
+        final String email = userRegisterAllowedEmailsProperties.getEmailsList().get(1);
         final String expectedErrorTitle = "Invalid or incomplete data.";
         final List<String> expectedErrorMessages = List.of("The username is already taken.");
         final UserCredentialDataEntity userCredentialData = createUserAccountOnDatabase();
