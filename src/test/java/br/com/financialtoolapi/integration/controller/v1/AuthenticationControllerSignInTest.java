@@ -1,14 +1,12 @@
 package br.com.financialtoolapi.integration.controller.v1;
 
-import br.com.financialtoolapi.controller.v1.request.LoginRequestV1;
-import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
-import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.application.domain.entities.UserCredentialDataEntity;
+import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
+import br.com.financialtoolapi.controller.v1.request.LoginRequestV1;
+import br.com.financialtoolapi.controller.v1.response.LoginResponseV1;
 import br.com.financialtoolapi.integration.controller.AbstractApiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +14,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.UUID;
 
-import static br.com.financialtoolapi.controller.errorhandler.ErrorType.AUTHENTICATION_FAIL_BAD_CREDENTIALS;
-import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PAYLOAD_DATA_VALIDATION_FAIL;
 import static br.com.financialtoolapi.controller.errorhandler.CustomExceptionHandler.ARGUMENT_NOT_VALID_EXCEPTION_DEVELOPER_MESSAGE;
-import static br.com.financialtoolapi.utils.CookieUtils.ACCESS_TOKEN_COOKIE;
+import static br.com.financialtoolapi.controller.errorhandler.ErrorType.AUTHENTICATION_FAIL_BAD_CREDENTIALS;
+import static br.com.financialtoolapi.controller.errorhandler.ErrorType.PROVIDED_DATA_VALIDATION_FAIL;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class AuthenticationControllerSignInTest extends AbstractApiTest {
@@ -51,7 +48,7 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
         assertThat(response.getBody().nickname()).isEqualTo(nickname);
         assertThat(cookies).isNotNull();
         assertThat(cookies.isEmpty()).isFalse();
-        assertThat(cookies.get(0)).startsWith(ACCESS_TOKEN_COOKIE);
+        assertThat(cookies.get(0)).startsWith(HttpHeaders.AUTHORIZATION);
     }
 
     @Test
@@ -59,10 +56,11 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
             "When user try sign in with wrong username " +
             "Then api should return https status UNAUTHORIZED, " +
             "and a error response describing bad credentials error."
-            )
+    )
     void testBadCredentialsSignInWhenUsernameIsWrong() {
         final UserCredentialDataEntity userCredentialData = createUserAccountOnDatabase();
-        final String expectedErrorTitle = "Invalid username or password.";
+        final String expectedErrorTitle = "Authentication failed.";
+        final String expectedErrorMessage = "Invalid username or password.";
         final LoginRequestV1 loginRequestV1 = new LoginRequestV1(
                 UUID.randomUUID().toString(),
                 userCredentialData.getPassword()
@@ -82,7 +80,8 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
         assertThat(response.getBody().statusCode()).isEqualTo(AUTHENTICATION_FAIL_BAD_CREDENTIALS.getHttpStatus().value());
         assertThat(response.getBody().timestamp()).isNotNull();
         assertThat(response.getBody().instance()).isEqualTo(SIGN_IN_REQUEST_URL);
-        assertThat(response.getBody().errors().size()).isEqualTo(0);
+        assertThat(response.getBody().errors().size()).isEqualTo(1);
+        assertThat(response.getBody().errors().get(0)).isEqualTo(expectedErrorMessage);
         assertThat(response.getBody().developerInfo()).isNotNull();
 
     }
@@ -113,10 +112,10 @@ public class AuthenticationControllerSignInTest extends AbstractApiTest {
                 );
 
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus());
+        assertThat(response.getStatusCode()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL.getHttpStatus());
         assertThat(response.getBody().title()).isEqualTo(expectedErrorTitle);
-        assertThat(response.getBody().errorType()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL);
-        assertThat(response.getBody().statusCode()).isEqualTo(PAYLOAD_DATA_VALIDATION_FAIL.getHttpStatus().value());
+        assertThat(response.getBody().errorType()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL);
+        assertThat(response.getBody().statusCode()).isEqualTo(PROVIDED_DATA_VALIDATION_FAIL.getHttpStatus().value());
         assertThat(response.getBody().timestamp()).isNotNull();
         assertThat(response.getBody().instance()).isEqualTo(SIGN_IN_REQUEST_URL);
         assertThat(response.getBody().errors().containsAll(expectedMessages)).isTrue();

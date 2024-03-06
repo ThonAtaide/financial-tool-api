@@ -1,11 +1,12 @@
 package br.com.financialtoolapi.infrastructure.config.security;
 
-import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
 import br.com.financialtoolapi.application.utils.InternationalizationUtils;
+import br.com.financialtoolapi.controller.errorhandler.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,11 +20,12 @@ import java.util.List;
 
 import static br.com.financialtoolapi.controller.errorhandler.ErrorType.AUTHENTICATION_TOKEN_MISSING;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private static final String  MISSING_ACCESS_TOKEN_MESSAGE_CODE= "sign-in.access-token-missing.error-message";
+    private static final String MISSING_ACCESS_TOKEN_MESSAGE_CODE = "sign-in.access-token-missing.error-message";
 
     private final ObjectMapper objectMapper;
     private final MessageSource messageSource;
@@ -34,7 +36,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             final HttpServletResponse response,
             final AuthenticationException authException
     ) throws IOException {
-
+        log.info(authException.getMessage());
         final String instance = request.getServletPath();
         final String messageTitle = InternationalizationUtils
                 .getMessage(messageSource, AUTHENTICATION_TOKEN_MISSING.getTitleMessageCode());

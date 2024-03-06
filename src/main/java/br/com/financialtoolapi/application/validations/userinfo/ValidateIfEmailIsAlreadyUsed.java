@@ -1,20 +1,20 @@
 package br.com.financialtoolapi.application.validations.userinfo;
 
-import br.com.financialtoolapi.application.usecases.security.FindUserAccountByEmailUseCase;
 import br.com.financialtoolapi.application.dtos.in.UserRegisterInputDto;
 import br.com.financialtoolapi.application.exceptions.ValidationDataException;
+import br.com.financialtoolapi.application.usecases.security.FindUserAccountByEmailUseCase;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class ValidateIfEmailIsAvailable extends UserInfoValidation {
+public class ValidateIfEmailIsAlreadyUsed extends AbstractUserInfoValidation {
 
     public static final String DETAILED_ERROR_MESSAGE = "The email %s has already be taken.";
     private final FindUserAccountByEmailUseCase findUserAccountByEmailUseCase;
 
-    public ValidateIfEmailIsAvailable(
+    public ValidateIfEmailIsAlreadyUsed(
             final MessageSource messageSource,
             final FindUserAccountByEmailUseCase findUserAccountByEmailUseCase
     ) {
@@ -23,7 +23,7 @@ public class ValidateIfEmailIsAvailable extends UserInfoValidation {
     }
 
     @Override
-    public void validate(UserRegisterInputDto userRegister) {
+    public void validate(final UserRegisterInputDto userRegister) {
         findUserAccountByEmailUseCase
                 .fetchUserAccountByEmail(userRegister.email())
                 .ifPresent(it -> {

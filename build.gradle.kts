@@ -1,8 +1,18 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.flywaydb:flyway-database-postgresql:10.4.1")
+    }
+}
+
 plugins {
     java
     id("org.springframework.boot") version "3.1.4"
     id("io.spring.dependency-management") version "1.1.3"
     jacoco
+    id("org.flywaydb.flyway") version "10.4.1"
 }
 
 group = "br.com.financialtoolapi"
@@ -12,7 +22,7 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
 
-tasks.withType<Jar> {
+tasks.named<Jar>("jar") {
     enabled = false
 }
 
@@ -47,9 +57,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("io.vavr:vavr:0.10.4")
 
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
     implementation("org.springframework.boot:spring-boot-starter-actuator:3.1.5")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
 
@@ -57,7 +70,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
-    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.postgresql:postgresql")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     testImplementation("com.h2database:h2:2.2.224")

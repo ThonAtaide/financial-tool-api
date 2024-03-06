@@ -9,5 +9,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "financial-tool.jwt-properties")
 public class JwtProperties {
 
-    private final Long tokenDurationSeconds;
+    private final Long tokenDurationMilliseconds;
+    private final String secretKey;
 }
