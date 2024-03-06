@@ -18,9 +18,7 @@ runFlyway() {
   cd
   echo "Cloning repository..."
   git clone https://github.com/ThonAtaide/financial-tool-api.git
-  cd financial-tool-api/
-  git checkout infra
-  cd src/main/resources/db/
+  cd financial-tool-api/src/main/resources/db/
   MIGRATIONS_PATH=$(pwd)
   echo "validating migrations repository..."
   docker run --network="$PRIVATE_NETWORK_NAME" --rm -v "$MIGRATIONS_PATH":/flyway/sql flyway/flyway \
