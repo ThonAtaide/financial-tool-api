@@ -4,6 +4,10 @@
 `./gradlew flywayMigrate -i -Dflyway.url=jdbc:postgresql://localhost:5432/postgres -Dflyway.user=postgres -Dflyway.password=postgres -Dflyway.postgresql.transactional.lock=false
 `
 
+#Deploy
+Current the application deployment is performed through the files stored at infra folder. 
+In a near future is intended to migrate to kubernetes and hence yml configuration files.
+Please replace the variables on containers.env file by your database credentials.
 ### Reference Documentation
 
 For further reference, please consider the following sections:
