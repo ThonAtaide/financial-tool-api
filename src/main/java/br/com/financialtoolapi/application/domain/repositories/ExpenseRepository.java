@@ -17,11 +17,12 @@ import java.util.*;
 @Repository
 public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long>, JpaSpecificationExecutor<ExpenseEntity> {
 
-    @Query("SELECT new br.com.financialtoolapi.application.dtos.out.ExpenseGroupOutputDto(e.expenseCategory.name, sum(e.amount)) from ExpenseEntity e " +
+    @Query("SELECT new br.com.financialtoolapi.application.dtos.out.ExpenseGroupOutputDto(e.expenseCategory.id, e.expenseCategory.name, sum(e.amount)) from ExpenseEntity e " +
             "where e.owner.id = ?1 " +
             "and e.datPurchase <= ?2 " +
             "and e.datPurchase >= ?3 " +
-            "group by (e.expenseCategory.name)")
+            "group by(e.expenseCategory.id, e.expenseCategory.name)"
+    )
     Set<ExpenseGroupOutputDto> groupByExpenseCategories(
             final UUID accountIdentifier,
             final Date from,

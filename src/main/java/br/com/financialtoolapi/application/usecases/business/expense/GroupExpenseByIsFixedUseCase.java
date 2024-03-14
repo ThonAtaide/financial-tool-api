@@ -30,7 +30,7 @@ public class GroupExpenseByIsFixedUseCase {
                     final boolean isFixed = (boolean) it.get("isFixed");
                     final String label = isFixed ? "Fixed" : "Not fixed";
                     final BigDecimal amount = (BigDecimal) it.get("amount");
-                    return new ExpenseGroupOutputDto(label, amount);
+                    return new ExpenseGroupOutputDto(null, label, amount);
                 }).collect(Collectors.toSet());
     }
 
